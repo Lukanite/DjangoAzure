@@ -8,7 +8,6 @@ from app.forms import BootstrapAuthenticationForm
 from app.views import *
 from app.models import *
 from django.contrib.auth.views import *
-from newsletter.views import *
 
 
 # Uncomment the next lines to enable the admin:
