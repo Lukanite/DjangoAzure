@@ -8,6 +8,12 @@
 <p>You have xxx new messages</p>
 
 {% include 'django_messages/base.html' %}
+{% include 'django_messages/compose.html' %}
+{% include 'django_messages/inbox.html' %}
+{% include 'django_messages/new_messages.html' %}
+{% include 'django_messages/outbox.html' %}
+{% include 'django_messages/trash.html' %}
+{% include 'django_messages/view.html' %}
 
 {% load inbox %}
 {% inbox_count %}
