@@ -68,7 +68,7 @@ def message(request):
     assert isinstance(request, HttpRequest)
     return render(
         request,
-        'a;;/message.html',
+        'app/message.html',
         context_instance = RequestContext(request,
                                          {
                                               'title': 'Messages',
