@@ -62,3 +62,17 @@ def signup(request):
             'year':datetime.now().year,
         })
     )
+
+def message(request):
+    """Renders the messaging page."""
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'a;;/message.html',
+        context_instance = RequestContext(request,
+                                         {
+                                              'title': 'Messages',
+                                              'message': 'Inbox',
+                                              'year':datetime.now().year,
+                                          })
+    )
