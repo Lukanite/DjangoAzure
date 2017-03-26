@@ -33,6 +33,7 @@ urlpatterns = [
         name='login'),
     url(r'^logout$', logout, {  'next_page': '/'  },        name='logout'),
     url(r'^signup', signup, name='signup'),
+    url(r'^submit_signup', submit_signup, name='submit_signup')
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
