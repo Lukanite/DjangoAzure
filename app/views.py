@@ -72,8 +72,91 @@ def message(request):
         'app/message.html',
         context_instance = RequestContext(request,
                                          {
-                                              'title': 'Messages',
-                                              'message': 'Inbox',
+                                              'title': 'Messages Home',
                                               'year':datetime.now().year,
                                           })
+    )
+
+def compose(request):
+    """Renders the signup page."""
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/compose.html',
+        context_instance = RequestContext(request,
+        {
+            'title':'New Message',
+            'message':'Write a new message',
+            'year':datetime.now().year,
+        })
+    )
+
+def inbox(request):
+    """Renders the signup page."""
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/inbox.html',
+        context_instance = RequestContext(request,
+        {
+            'title':'Your Inbox',
+            'message':'inbox',
+            'year':datetime.now().year,
+        })
+    )
+
+def new_messages(request):
+    """Renders the signup page."""
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/new_messages.html',
+        context_instance = RequestContext(request,
+        {
+            'title':'Your new messages',
+            'message':'new messages',
+            'year':datetime.now().year,
+        })
+    )
+
+def outbox(request):
+    """Renders the signup page."""
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/outbox.html',
+        context_instance = RequestContext(request,
+        {
+            'title':'Your outbox',
+            'message':'outbox',
+            'year':datetime.now().year,
+        })
+    )
+
+def trash(request):
+    """Renders the signup page."""
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/trash.html',
+        context_instance = RequestContext(request,
+        {
+            'title':'your trash',
+            'message':'trash',
+            'year':datetime.now().year,
+        })
+    )
+
+def view(request):
+    """Renders the signup page."""
+    assert isinstance(request, HttpRequest)
+    return render(
+        request,
+        'app/view.html',
+        context_instance = RequestContext(request,
+        {
+            'title':'View',
+            'message':'single message',
+            'year':datetime.now().year,
+        })
     )

@@ -1,21 +1,16 @@
 {% extends "app/layout.html" %}
 
+{% load i18n %}
+
 {% block content %}
 
 <h2>{{ title }}</h2>
 <h3>{{ message }}</h3>
-
-<p>You have xxx new messages</p>
-
-{% include 'django_messages/base.html' %}
-{% include 'django_messages/compose.html' %}
-{% include 'django_messages/inbox.html' %}
-{% include 'django_messages/new_messages.html' %}
-{% include 'django_messages/outbox.html' %}
-{% include 'django_messages/trash.html' %}
-{% include 'django_messages/view.html' %}
-
-{% load inbox %}
-{% inbox_count %}
+<ul class="subnavilist">
+    <li><a href="{% url 'inbox' %} ">&raquo;&nbsp;{% trans "Inbox" %}</a></li>
+    <li><a href="{% url 'outbox' %} ">&raquo;&nbsp;{% trans "Sent Messages" %}</a></li>
+    <li><a href="{% url 'compose' %} ">&raquo;&nbsp;{% trans "New Message" %}</a></li>
+    <li><a href="{% url 'trash' %} ">&raquo;&nbsp;{% trans "Trash" %}</a></li>
+</ul>
 
 {% endblock %}}
