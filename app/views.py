@@ -9,6 +9,14 @@ from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.template import loader
 from django.http import HttpResponse
+from app.forms import UserForm
+import hashlib
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+from django.contrib.auth import login
+
+
+
 
 
 
@@ -67,6 +75,7 @@ def signup(request):
         })
     )
 
+
 @csrf_exempt
 def submit_signup(request):
     if request.method == "POST":
@@ -75,13 +84,18 @@ def submit_signup(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user_type = request.POST.get('user_type')
+        #password = hashlib.md5(password.encode('utf-8'))
         context = {
             'first_name': first_name,
             'last_name': last_name,
             'username': username,
-            'password': password,
-            'user_type': user_type,
         }
+
+        form = UserForm(context)
+        #User.objects.create_user(**form.cleaned_data)
+
+        form.save()
+
 
         return render(
             request,
