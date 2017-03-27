@@ -1,4 +1,4 @@
 django<1.10
 gunicorn
 whitenoise
-djagno_messages
+django_messages
