@@ -89,6 +89,7 @@ def submit_signup(request):
             'first_name': first_name,
             'last_name': last_name,
             'username': username,
+            'password': password
         }
 
         form = UserForm(context)
