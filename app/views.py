@@ -8,7 +8,12 @@ from django.template import RequestContext
 
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
-from .forms import MessageForm
+from django.template import loader
+from django.http import HttpResponse
+from app.forms import UserForm
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+
 
 def home(request):
     """Renders the home page."""
@@ -51,19 +56,27 @@ def about(request):
         })
     )
 
+@csrf_exempt
 def signup(request):
     """Renders the signup page."""
-    assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/signup.html',
-        context_instance = RequestContext(request,
-        {
-            'title':'Sign up',
-            'message':'Sign up page',
-            'year':datetime.now().year,
-        })
-    )
+    if request.method == "POST":
+        form = UserForm(request.POST)
+        if form.is_valid():
+            User.objects.create_user(**form.cleaned_data)
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            new_user = authenticate(username=username, password=password)
+            login(request, new_user)
+            # redirect, or however you want to get to the main view
+            return render(request, 'app/index.html', context_instance = RequestContext(request, {
+            'title':'Home Page',
+            'year':datetime.now().year,  }))
+    else:
+        form = UserForm()
+
+    return render(request, 'app/signup.html', {'title':'Sign up',
+                                           'message':'Please Enter Your Information',
+                                           'year':datetime.now().year, 'form': form})
 
 def message(request):
     """Renders the messaging page."""
