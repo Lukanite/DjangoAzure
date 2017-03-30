@@ -10,11 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.template import loader
 from django.http import HttpResponse
 from app.forms import UserForm
-import hashlib
-from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from django.contrib.auth import login
-
+from django.contrib.auth import authenticate, login
 
 
 
@@ -61,51 +58,26 @@ def about(request):
         })
     )
 
+@csrf_exempt
 def signup(request):
     """Renders the signup page."""
-    assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/signup.html',
-        context_instance = RequestContext(request,
-        {
-            'title':'Sign up',
-            'message':'Please Enter Your Information',
-            'year':datetime.now().year,
-        })
-    )
-
-
-@csrf_exempt
-def submit_signup(request):
     if request.method == "POST":
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user_type = request.POST.get('user_type')
-        #password = hashlib.md5(password.encode('utf-8'))
-        context = {
-            'first_name': first_name,
-            'last_name': last_name,
-            'username': username,
-            'password': password
-        }
-
-        form = UserForm(context)
-        #User.objects.create_user(**form.cleaned_data)
-
-        form.save()
-
-
-        return render(
-            request,
-            'app/submit_signup.html',
-            context_instance=RequestContext(request, context))
+        form = UserForm(request.POST)
+        if form.is_valid():
+            User.objects.create_user(**form.cleaned_data)
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            new_user = authenticate(username=username, password=password)
+            login(request, new_user)
+            # redirect, or however you want to get to the main view
+            return render(request, 'app/index.html', context_instance = RequestContext(request, {
+            'title':'Home Page',
+            'year':datetime.now().year,
+        }))
     else:
-        template = loader.get_template('app/signup.html')
-        return HttpResponse(template.render())
+        form = UserForm()
 
-
-
+    return render(request, 'app/signup.html', {'title':'Sign up',
+                                           'message':'Please Enter Your Information',
+                                           'year':datetime.now().year, 'form': form})
 
