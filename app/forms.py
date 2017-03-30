@@ -16,3 +16,7 @@ class BootstrapAuthenticationForm(AuthenticationForm):
                                widget=forms.PasswordInput({
                                    'class': 'form-control',
                                    'placeholder':'Password'}))
+
+class MessageForm(forms.Form):
+    subject = forms.CharField(required=True, label='Message Subject')
+    message_body = forms.CharField(required=True, label='Message Body', widget=forms.Textarea)

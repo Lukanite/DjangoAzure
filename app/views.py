@@ -8,6 +8,7 @@ from django.template import RequestContext
 
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
+from .forms import MessageForm
 
 def home(request):
     """Renders the home page."""
@@ -78,8 +79,16 @@ def message(request):
     )
 
 def compose(request):
-    """Renders the signup page."""
+    """Renders the new message page."""
     assert isinstance(request, HttpRequest)
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            subject = request.POST.get('subject', '')
+            message_body = request.POST.get('message_body', '')
+            return HttpResponseRedirect('new_messages')
+    else:
+        form = MessageForm()
     return render(
         request,
         'app/compose.html',
@@ -92,7 +101,7 @@ def compose(request):
     )
 
 def inbox(request):
-    """Renders the signup page."""
+    """Renders the inbox page."""
     assert isinstance(request, HttpRequest)
     return render(
         request,
@@ -106,18 +115,19 @@ def inbox(request):
     )
 
 def new_messages(request):
-    """Renders the signup page."""
+    """Renders the new message notification page."""
     assert isinstance(request, HttpRequest)
+
     return render(
         request,
         'app/new_messages.html',
-        context_instance = RequestContext(request,
-        {
-            'title':'Your new messages',
-            'message':'new messages',
-            'year':datetime.now().year,
-        })
-    )
+        context_instance=RequestContext(request,
+                                        {
+                                            'title': 'Your new messages',
+                                            'message': 'new messages',
+                                            'year': datetime.now().year,
+                                        }))
+
 
 def outbox(request):
     """Renders the signup page."""
