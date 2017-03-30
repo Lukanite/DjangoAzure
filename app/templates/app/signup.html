@@ -13,10 +13,36 @@
         <title>Title</title>
     </head>
     <body>
-    <form method="post" action="">
-    {{ form }}
-    <input type="submit" value="Create new user account" />
-    </form>
+{#    <form method="post" action="">#}
+{#    {{ form }}#}
+{#    <input type="submit" value="Create new user account" />#}
+{#    </form>#}
+<form method="post" action="">
+{% for field in form %}
+            {% if field.errors %}
+                <div class="control-group error">
+                    <label class="control-label">{{ field.label }}</label>
+                    <div class="controls">{{ field }}
+                        <span class="help-inline">
+                            {% for error in  field.errors %}{{ error }}{% endfor %}
+                        </span>
+                    </div>
+                </div>
+            {% else %}
+                <div class="control-group">
+                    <label class="control-label">{{ field.label }}</label>
+                    <div class="controls">{{ field }}
+                        {% if field.help_text %}
+                            <p class="help-inline"><small>{{ field.help_text }}</small></p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </fieldset>
+    <br>
+   <input type="submit" value="Create new user account" />
+</form>
 
 
 {#    <form method="post" action="/submit_signup/">#}
