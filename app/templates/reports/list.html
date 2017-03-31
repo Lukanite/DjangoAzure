@@ -4,7 +4,7 @@
 <h1>Report View</h1>
 <ul class="list-group">
     {% for report in reports %}
-    <li class="list-group-item"><a href="{{report.pk}}">{{ report.name }}</a></li>
+    <li class="list-group-item"><a href="{% url 'reports' %}/{{report.pk}}">{{ report.name }}</a></li>
     {% endfor %}
 </ul>
 <a class="btn btn-primary" href="new" role="button">New Report</a>
