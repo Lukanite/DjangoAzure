@@ -7,6 +7,7 @@ from django.conf.urls import include, url
 from app.forms import BootstrapAuthenticationForm
 from app.views import *
 from app.models import *
+from reports.views import reportlist
 from django.contrib.auth.views import *
 
 
@@ -33,6 +34,7 @@ urlpatterns = [
         name='login'),
     url(r'^logout$', logout, {  'next_page': '/'  },        name='logout'),
     url(r'^signup', signup, name='signup'),
+    url(r'^reports', reportlist, name='reports'),
     url(r'^reports/', include('reports.urls')),
     url(r'^message', message, name='message'),
     url(r'^messages/', include('django_messages.urls')),
