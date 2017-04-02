@@ -15,7 +15,7 @@
     <body>
 
     <form method="post" action="">
-        {% for field in form %}
+        {% for field in user_form %}
             {% if field.errors %}
                 <div class="control-group error">
                     <label class="control-label">{{ field.label }}</label>
@@ -38,9 +38,9 @@
                 </div>
             {% endif %}
         {% endfor %}
-        </fieldset>
         <br>
-        <input type="submit" value="Create new user account"/>
+        {{ user_profile_form.as_p }}
+        <button type="submit" class="btn btn-primary">Create a User</button>
     </form>
     </body>
     </html>
