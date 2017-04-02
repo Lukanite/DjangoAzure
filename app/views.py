@@ -10,7 +10,7 @@ from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 from django.template import loader
 from django.http import HttpResponse
-from app.forms import UserForm
+from app.forms import UserForm, ProfileForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 
@@ -61,23 +61,29 @@ def about(request):
 def signup(request):
     """Renders the signup page."""
     if request.method == "POST":
-        form = UserForm(request.POST)
-        if form.is_valid():
-            User.objects.create_user(**form.cleaned_data)
-            username = request.POST.get('username')
-            password = request.POST.get('password')
+        user_form = UserForm(request.POST, prefix="user")
+        user_profile_form = ProfileForm(request.POST, prefix="profile")
+        if user_form.is_valid() and user_profile_form.is_valid():
+            new_user = User.objects.create_user(**user_form.cleaned_data)
+            user_type = request.POST.get("profile-user_type")
+            new_user.profile.user_type = user_type
+            new_user.save()
+            username = request.POST.get('user-username')
+            password = request.POST.get('user-password')
             new_user = authenticate(username=username, password=password)
             login(request, new_user)
-            # redirect, or however you want to get to the main view
+
             return render(request, 'app/index.html', context_instance = RequestContext(request, {
-            'title':'Home Page',
-            'year':datetime.now().year,  }))
+                'title':'Home Page',
+                'year':datetime.now().year,  }))
     else:
-        form = UserForm()
+        user_form = UserForm()
+        user_profile_form = ProfileForm()
+
 
     return render(request, 'app/signup.html', {'title':'Sign up',
                                            'message':'Please Enter Your Information',
-                                           'year':datetime.now().year, 'form': form})
+                                           'year':datetime.now().year, 'user_form': user_form, 'user_profile_form' : user_profile_form})
 
 def message(request):
     """Renders the messaging page."""
