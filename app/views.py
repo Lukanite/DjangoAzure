@@ -8,6 +8,9 @@ from django.template import RequestContext
 
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
+
+from .forms import MessageForm
+
 from django.template import loader
 from django.http import HttpResponse
 from app.forms import UserForm, ProfileForm
@@ -99,25 +102,27 @@ def message(request):
 
 def compose(request):
     """Renders the new message page."""
-    assert isinstance(request, HttpRequest)
+    #assert isinstance(request, HttpRequest)
     if request.method == 'POST':
         form = MessageForm(request.POST)
         if form.is_valid():
+            #new_message = Message.objects.create()
             subject = request.POST.get('subject', '')
-            message_body = request.POST.get('message_body', '')
+            content = request.POST.get('content', '')
+            sender = request.user
+            receiver = request.POST.get('receiver', '')
+            message_obj = Message(subject=subject, content=content)
+            message_obj.save()
             return HttpResponseRedirect('new_messages')
     else:
         form = MessageForm()
     return render(
-        request,
-        'app/compose.html',
-        context_instance = RequestContext(request,
-        {
-            'title':'New Message',
-            'message':'Write a new message',
+        request, 'app/compose.html',
+        { 'title':'New Message',
+          'current_user': request.user,
             'year':datetime.now().year,
         })
-    )
+
 
 def inbox(request):
     """Renders the inbox page."""

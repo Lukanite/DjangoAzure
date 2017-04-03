@@ -2,18 +2,22 @@
 {% load i18n %}
 
 {% block content %}
-<h1>{% trans "Compose Message"%}</h1>
+<h2>{{ title }}</h2>
+<h3>{{ message }}</h3>
 <form action="new_messages.html" method="post">
 {% csrf_token %}
-<table>
-{{ form.as_table }}
-</table>
-    <textarea name="message body" style="height: 200px; width: 500px;"></textarea><br>
-        <div style="float: left"></div>
+    {{ form.as_p }}
+
+    <label for="receiver">To: &nbsp;&nbsp;&nbsp;&nbsp;</label>
+    <input id="receiver" type="text"><br>
+    <label for="sender">From: </label>
+    <input id="sender" type="text" value="{{ current_user }}"><br><br>
+    <label for="content">Message: </label><br>
+    <input id="content" type="text" name="content" style="height: 200px; width: 500px"><br>
+    <div style="float: left"></div>
         <input type="button" value="Encrypt Message?" p/>
         <div style="float: right"></div>
         <input type="submit" value="{% trans 'Send' %} &raquo;"/>
-
 </form>
 
 {% endblock %}
