@@ -7,8 +7,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
 
-
 from app.models import Profile
+from .models import Message
+
 
 class BootstrapAuthenticationForm(AuthenticationForm):
     """Authentication form which uses boostrap CSS."""
@@ -22,13 +23,17 @@ class BootstrapAuthenticationForm(AuthenticationForm):
                                    'placeholder':'Password'}))
 
 class MessageForm(forms.ModelForm):
-
     class Meta:
-        model = Messages
-        fields = ('subject', 'content',)
+        model = Message
+        fields = ('subject', 'content', 'sender', 'receiver', 'send_date')
 
    # subject = forms.CharField(required=True, label='Message Subject')
     #message_body = forms.CharField(required=True, label='Message Body', widget=forms.Textarea)
+
+# class ProfileForm(forms.ModelForm):
+#     class Meta:
+#         model = Profile
+#         fields = ('url', 'user_type')
 
 class UserForm(forms.ModelForm):
     class Meta:
