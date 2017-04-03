@@ -33,4 +33,4 @@ class Report(models.Model):
     sector = models.ForeignKey(Sector, on_delete=models.CASCADE)
     industry = models.ForeignKey(Industry, on_delete=models.CASCADE)
     isprivate = models.BooleanField(default=True)
-    release_date = models.DateField()
+    release_date = models.DateField(auto_now_add=True)
