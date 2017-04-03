@@ -6,6 +6,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import User
+from .models import Messages
 
 class BootstrapAuthenticationForm(AuthenticationForm):
     """Authentication form which uses boostrap CSS."""
@@ -18,6 +19,15 @@ class BootstrapAuthenticationForm(AuthenticationForm):
                                    'class': 'form-control',
                                    'placeholder':'Password'}))
 
+class MessageForm(forms.ModelForm):
+
+    class Meta:
+        model = Messages
+        fields = ('subject', 'content',)
+
+   # subject = forms.CharField(required=True, label='Message Subject')
+    #message_body = forms.CharField(required=True, label='Message Body', widget=forms.Textarea)
+
 class UserForm(forms.ModelForm):
     class Meta:
         model = User
@@ -27,4 +37,3 @@ class UserForm(forms.ModelForm):
 #     class Meta:
 #         model = Profile
 #         fields = ('url', 'user_type')
-

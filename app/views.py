@@ -8,6 +8,9 @@ from django.template import RequestContext
 
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
+
+from .forms import MessageForm
+
 from django.template import loader
 from django.http import HttpResponse
 from app.forms import UserForm
