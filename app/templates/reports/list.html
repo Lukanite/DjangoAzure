@@ -7,5 +7,5 @@
     <li class="list-group-item"><a href="{% url 'reports' %}/{{report.pk}}">{{ report.name }}</a></li>
     {% endfor %}
 </ul>
-<a class="btn btn-primary" href="new" role="button">New Report</a>
+<a class="btn btn-primary" href="{% url reports:newreport %}" role="button">New Report</a>
 {% endblock %}
