@@ -6,4 +6,5 @@ urlpatterns = [
     url(r'^$', views.reportlist, name='index'),
     url(r'^new$', views.newreport, name='new'),
     url(r'^(?P<report_id>[0-9]+)/$', views.detail, name='detail'),
+    url(r'^(?P<report_id>[0-9]+)/edit/$', views.editreport, name='edit'),
 ]
