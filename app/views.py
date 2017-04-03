@@ -33,6 +33,7 @@ def contact(request):
     """Renders the contact page."""
     assert isinstance(request, HttpRequest)
     return render(
+        request,
         'app/contact.html',
         context={
             'title': 'Contact',
@@ -79,13 +80,14 @@ def signup(request):
         user_form = UserForm()
         user_profile_form = ProfileForm()
 
-    return render(request, 'app/signup.html',
-                  {
-                      'title': 'Sign up', 'message': 'Please Enter Your Information',
-                      'year': datetime.now().year, 'user_form': user_form,
-                      'user_profile_form': user_profile_form
-                  }
-                  )
+    return render(
+        request, 'app/signup.html',
+        {
+            'title': 'Sign up', 'message': 'Please Enter Your Information',
+            'year': datetime.now().year, 'user_form': user_form,
+            'user_profile_form': user_profile_form
+        }
+    )
 
 
 def message(request):
@@ -103,11 +105,11 @@ def message(request):
 
 def compose(request):
     """Renders the new message page."""
-    #assert isinstance(request, HttpRequest)
+    # assert isinstance(request, HttpRequest)
     if request.method == 'POST':
         form = MessageForm(request.POST)
         if form.is_valid():
-            #new_message = Message.objects.create()
+            # new_message = Message.objects.create()
             subject = request.POST.get('subject', '')
             content = request.POST.get('content', '')
             sender = request.user
@@ -116,9 +118,8 @@ def compose(request):
             message_obj.save()
             return HttpResponseRedirect('new_messages')
     else:
-        form = MessageForm(forms.FORM)
+        form = MessageForm
     return render(
-<<<<<<< HEAD
         request,
         'app/compose.html',
         context={
@@ -127,14 +128,6 @@ def compose(request):
             'year': datetime.now().year,
         }
     )
-=======
-        request, 'app/compose.html',
-        { 'title':'New Message',
-          'current_user': request.user,
-            'year':datetime.now().year,
-        })
-
->>>>>>> e15808ba5a38b8a95254fc082a94b0a91e100e55
 
 
 def inbox(request):
@@ -159,9 +152,9 @@ def new_messages(request):
         request,
         'app/new_messages.html',
         context={
-                'title': 'Your new messages',
-                'message': 'new messages',
-                'year': datetime.now().year,
+            'title': 'Your new messages',
+            'message': 'new messages',
+            'year': datetime.now().year,
         }
     )
 
@@ -173,9 +166,9 @@ def outbox(request):
         request,
         'app/outbox.html',
         context={
-                'title': 'Your outbox',
-                'message': 'outbox',
-                'year': datetime.now().year,
+            'title': 'Your outbox',
+            'message': 'outbox',
+            'year': datetime.now().year,
         }
     )
 

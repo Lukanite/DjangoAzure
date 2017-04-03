@@ -35,32 +35,31 @@ APP_DIRS = 'true'
 LOGIN_URL = '/login'
 
 TEMPLATES = [
-{
-    'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': [
-        os.path.join(PROJECT_ROOT, 'app/templates/app'),
-    ],
-
-    'OPTIONS': {
-        'context_processors': [
-            # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
-            # list if you haven't customized them:
-            'django.contrib.auth.context_processors.auth',
-            'django.template.context_processors.debug',
-            'django.template.context_processors.i18n',
-            'django.template.context_processors.media',
-            'django.template.context_processors.static',
-            'django.template.context_processors.tz',
-            'django.contrib.messages.context_processors.messages',
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(PROJECT_ROOT, 'app/templates/app'),
         ],
-        'debug': 'DEBUG',
-        'loaders': [
-            'django.template.loaders.filesystem.Loader',
-            'django.template.loaders.app_directories.Loader',
-            # 'django.template.loaders.eggs.Loader',
-    ],
-    },
 
+        'OPTIONS': {
+            'context_processors': [
+                # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
+                # list if you haven't customized them:
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+            ],
+            'debug': 'DEBUG',
+            'loaders': [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+                # 'django.template.loaders.eggs.Loader',
+            ],
+        },
     }
 ]
 
@@ -124,7 +123,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
