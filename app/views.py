@@ -77,8 +77,8 @@ def signup(request):
                 'title': 'Home Page',
                 'year': datetime.now().year, })
     else:
-        user_form = UserForm()
-        user_profile_form = ProfileForm()
+        user_form = UserForm(prefix="user")
+        user_profile_form = ProfileForm(prefix="profile")
 
     return render(
         request, 'app/signup.html',
