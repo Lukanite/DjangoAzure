@@ -14,6 +14,8 @@ from django.template import loader
 from app.forms import UserForm, ProfileForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.http import HttpResponseRedirect
+
 
 
 def home(request):
@@ -72,10 +74,7 @@ def signup(request):
             password = request.POST.get('user-password')
             new_user = authenticate(username=username, password=password)
             login(request, new_user)
-
-            return render(request, 'app/index.html', context={
-                'title': 'Home Page',
-                'year': datetime.now().year, })
+            return HttpResponseRedirect('/')
     else:
         user_form = UserForm(prefix="user")
         user_profile_form = ProfileForm(prefix="profile")
@@ -93,109 +92,131 @@ def signup(request):
 def message(request):
     """Renders the messaging page."""
     assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/message.html',
-        context={
-            'title': 'Messages Home',
-            'year': datetime.now().year,
-        }
-    )
+    if request.user.is_authenticated():
+        return render(
+            request,
+            'app/message.html',
+            context={
+                'title': 'Messages Home',
+                'year': datetime.now().year,
+            }
+        )
+    else:
+       return HttpResponseRedirect('/')
+
+
 
 
 def compose(request):
     """Renders the new message page."""
     # assert isinstance(request, HttpRequest)
-    if request.method == 'POST':
-        form = MessageForm(request.POST)
-        if form.is_valid():
-            # new_message = Message.objects.create()
-            subject = request.POST.get('subject', '')
-            content = request.POST.get('content', '')
-            sender = request.user
-            receiver = request.POST.get('receiver', '')
-            message_obj = Message(subject=subject, content=content)
-            message_obj.save()
-            return HttpResponseRedirect('new_messages')
+    if request.user.is_authenticated():
+        if request.method == 'POST':
+            form = MessageForm(request.POST)
+            if form.is_valid():
+                # new_message = Message.objects.create()
+                subject = request.POST.get('subject', '')
+                content = request.POST.get('content', '')
+                sender = request.user
+                receiver = request.POST.get('receiver', '')
+                message_obj = Message(subject=subject, content=content)
+                message_obj.save()
+                return HttpResponseRedirect('new_messages')
+        else:
+            form = MessageForm
+        return render(
+            request,
+            'app/compose.html',
+            context={
+                'title': 'New Message',
+                'message': 'Write a new message',
+                'year': datetime.now().year,
+            }
+        )
     else:
-        form = MessageForm
-    return render(
-        request,
-        'app/compose.html',
-        context={
-            'title': 'New Message',
-            'message': 'Write a new message',
-            'year': datetime.now().year,
-        }
-    )
+        return HttpResponseRedirect('/')
 
 
 def inbox(request):
     """Renders the inbox page."""
     assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/inbox.html',
-        context={
-            'title': 'Your Inbox',
-            'message': 'inbox',
-            'year': datetime.now().year,
-        }
-    )
+    if request.user.is_authenticated():
+        return render(
+            request,
+            'app/inbox.html',
+            context={
+                'title': 'Your Inbox',
+                'message': 'inbox',
+                'year': datetime.now().year,
+            }
+        )
+    else:
+        return HttpResponseRedirect('/')
 
 
 def new_messages(request):
     """Renders the new message notification page."""
     assert isinstance(request, HttpRequest)
-
-    return render(
-        request,
-        'app/new_messages.html',
-        context={
-            'title': 'Your new messages',
-            'message': 'new messages',
-            'year': datetime.now().year,
-        }
-    )
+    if request.user.is_authenticated():
+        return render(
+            request,
+            'app/new_messages.html',
+            context={
+                'title': 'Your new messages',
+                'message': 'new messages',
+                'year': datetime.now().year,
+            }
+        )
+    else:
+        return HttpResponseRedirect('/')
 
 
 def outbox(request):
     """Renders the signup page."""
     assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/outbox.html',
-        context={
-            'title': 'Your outbox',
-            'message': 'outbox',
-            'year': datetime.now().year,
-        }
-    )
+    if request.user.is_authenticated():
+        return render(
+            request,
+            'app/outbox.html',
+            context={
+                'title': 'Your outbox',
+                'message': 'outbox',
+                'year': datetime.now().year,
+            }
+        )
+    else:
+        return HttpResponseRedirect('/')
 
 
 def trash(request):
     """Renders the signup page."""
     assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/trash.html',
-        context={
-            'title': 'your trash',
-            'message': 'trash',
-            'year': datetime.now().year,
-        }
-    )
+    if request.user.is_authenticated():
+        return render(
+            request,
+            'app/trash.html',
+            context={
+                'title': 'your trash',
+                'message': 'trash',
+                'year': datetime.now().year,
+            }
+        )
+    else:
+        return HttpResponseRedirect('/')
 
 
 def view(request):
     """Renders the signup page."""
     assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/view.html',
-        context={
-            'title': 'View',
-            'message': 'single message',
-            'year': datetime.now().year,
-        }
-    )
+    if request.user.is_authenticated():
+        return render(
+            request,
+            'app/view.html',
+            context={
+                'title': 'View',
+                'message': 'single message',
+                'year': datetime.now().year,
+            }
+        )
+    else:
+        return HttpResponseRedirect('/')
