@@ -2,17 +2,23 @@ from django.shortcuts import render, HttpResponse, get_object_or_404
 from django.http import HttpResponseRedirect
 from .models import Report
 from .forms import ReportForm
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 
+@login_required()
 def reportlist(request):
     reports = Report.objects.all()
     return render(request, 'reports/list.html', {'reports': reports})
+
+@login_required()
 
 def detail(request, report_id):
     report = get_object_or_404(Report, pk=report_id)
     return render(request, 'reports/detail.html', {'report': report})
 
+@login_required()
 def newreport(request):
     if request.method == 'POST':
         filledform = ReportForm(request.POST, request.FILES)
@@ -21,6 +27,7 @@ def newreport(request):
     form = ReportForm()
     return render(request, 'reports/newreport.html', {'form': form})
 
+@login_required()
 def editreport(request, report_id):
     report = get_object_or_404(Report, pk=report_id)
     if request.method == 'POST':
