@@ -34,3 +34,4 @@ class Report(models.Model):
     industry = models.ForeignKey(Industry, on_delete=models.CASCADE)
     isprivate = models.BooleanField(default=True)
     release_date = models.DateField(auto_now_add=True)
+    attachment = models.FileField(upload_to='reports/')
