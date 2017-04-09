@@ -9,7 +9,7 @@ from app.views import *
 from app.models import *
 from reports.views import reportlist
 from django.contrib.auth.views import *
-
+from site_manager.views import site_manager
 #File uploads
 from django.conf import settings
 from django.conf.urls.static import static
@@ -47,6 +47,7 @@ urlpatterns = [
     url(r'^outbox', outbox, name='outbox'),
     url(r'^trash', trash, name='trash'),
     url(r'^view', view, name='view'),
+    url(r'^site_manager$', site_manager, name='site_manager'),
     
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
