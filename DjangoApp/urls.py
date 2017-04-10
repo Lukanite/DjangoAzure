@@ -44,6 +44,8 @@ urlpatterns = [
     url(r'^outbox', outbox, name='outbox'),
     url(r'^trash', trash, name='trash'),
     url(r'^view', view, name='view'),
+    url(r'^group', group, name='group'),
+    url(r'^create_group', create_group, name='create_group'),
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

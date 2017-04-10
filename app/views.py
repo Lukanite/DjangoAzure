@@ -4,6 +4,7 @@ Definition of views.
 
 from django.shortcuts import render
 from django.http import HttpRequest
+from django.template import RequestContext
 
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
@@ -172,7 +173,7 @@ def new_messages(request):
 
 
 def outbox(request):
-    """Renders the signup page."""
+    """Renders the outbox page."""
     assert isinstance(request, HttpRequest)
     if request.user.is_authenticated():
         return render(
@@ -206,7 +207,7 @@ def trash(request):
 
 
 def view(request):
-    """Renders the signup page."""
+    """Renders the trash page."""
     assert isinstance(request, HttpRequest)
     if request.user.is_authenticated():
         return render(
@@ -220,3 +221,42 @@ def view(request):
         )
     else:
         return HttpResponseRedirect('/')
+
+def group(request):
+    """Renders the groups page."""
+    assert isinstance(request, HttpRequest)
+    if request.user.is_authenticated():
+        return render(
+            request,
+            'app/group.html',
+            context={
+                'title': 'Your Groups',
+                'year': datetime.now().year,
+            }
+        )
+    else:
+        return HttpResponseRedirect('/')
+
+def create_group(request):
+    """Renders the new group page."""
+    assert isinstance(request, HttpRequest)
+    if request.user.is_authenticated():
+        return render(
+            request,
+            'app/create_group.html',
+            context={
+                'title': 'Create a Group',
+                'year': datetime.now().year,
+            }
+        )
+    else:
+        return HttpResponseRedirect('/')
+
+def userlist(request):
+    context = RequestContext(request)
+    if request.method == 'GET':
+        users = UserForm(request.GET)
+        user = User.objects.all()
+    else:
+        pass
+    return render(request, 'create_group.html', {'user': user})
