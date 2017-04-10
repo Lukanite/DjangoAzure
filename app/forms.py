@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 
 from app.models import Profile
 from .models import Message
+from .models import Group
 
 
 class BootstrapAuthenticationForm(AuthenticationForm):
@@ -32,11 +33,6 @@ class MessageForm(forms.ModelForm):
    # subject = forms.CharField(required=True, label='Message Subject')
     #message_body = forms.CharField(required=True, label='Message Body', widget=forms.Textarea)
 
-# class ProfileForm(forms.ModelForm):
-#     class Meta:
-#         model = Profile
-#         fields = ('url', 'user_type')
-
 class UserForm(forms.ModelForm):
     class Meta:
         prefix = 'user'
@@ -47,9 +43,13 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         prefix = 'profile'
         model = Profile
-        # TYPES = ((0, 'Company_User'), (1, 'Investor_User'))
-        # user_type = forms.TypedChoiceField(label='user_type', choices=TYPES, widget=forms.RadioSelect,)
         fields = ['user_type']
+
+class GroupForm(forms.ModelForm):
+    class Meta:
+        prefix = 'group'
+        model = Group
+        fields = ['name', 'description', 'groupmembers']
 
 
 
