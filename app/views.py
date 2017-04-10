@@ -263,18 +263,5 @@ def userlist(request):
     else:
         pass
     return render(request, 'create_group.html', {'user': user})
-<<<<<<< HEAD
-=======
-    return render(
-        request,
-        'app/view.html',
-        context={
-            'title': 'View',
-            'message': 'single message',
-            'year': datetime.now().year,
-        }
-    )
->>>>>>> a3ee4f84bc3441b848062370224974556d073291
->>>>>>> 6c40b30979eda0741e9ab15b44a5f3b521ecfacb
-=======
->>>>>>> 618a8d2b01ab6d09e1e56d84b63ddecb3838ee66
+
+
