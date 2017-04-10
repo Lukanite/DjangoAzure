@@ -1,9 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpRequest
 from datetime import datetime
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
+
+def is_site_manager(user):
+    return user.profile.user_type == "site_manager"
+
+@login_required()
+@user_passes_test(is_site_manager, login_url='/', redirect_field_name = "")
 def site_manager(request):
     assert isinstance(request, HttpRequest)
     return render(
