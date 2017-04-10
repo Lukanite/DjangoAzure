@@ -20,6 +20,17 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 
+from django.http import HttpResponse, Http404
+from app.forms import UserForm, ProfileForm
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+#from .models import Message
+#from django_messages import views
+# from django_messages.models import Message
+# from django_messages.forms import ComposeForm
+# from django_messages.utils import format_quote, get_user_model, get_username_field
+
+
 
 
 def home(request):
@@ -91,7 +102,6 @@ def signup(request):
             'user_profile_form': user_profile_form
         }
     )
-
 
 
 @login_required()
