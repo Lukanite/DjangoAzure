@@ -9,7 +9,10 @@ from app.views import *
 from app.models import *
 from reports.views import reportlist
 from django.contrib.auth.views import *
-
+from site_manager.views import site_manager
+#File uploads
+from django.conf import settings
+from django.conf.urls.static import static
 
 # Uncomment the next lines to enable the admin:
 from django.conf.urls import include
@@ -44,11 +47,16 @@ urlpatterns = [
     url(r'^outbox', outbox, name='outbox'),
     url(r'^trash', trash, name='trash'),
     url(r'^view', view, name='view'),
+<<<<<<< HEAD
     url(r'^group', group, name='group'),
     url(r'^create_group', create_group, name='create_group'),
+=======
+    url(r'^site_manager$', site_manager, name='site_manager'),
+    
+>>>>>>> a3ee4f84bc3441b848062370224974556d073291
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

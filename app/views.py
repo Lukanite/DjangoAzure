@@ -16,7 +16,7 @@ from app.forms import UserForm, ProfileForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
-
+from django.contrib.auth.decorators import login_required
 
 
 def home(request):
@@ -90,125 +90,113 @@ def signup(request):
     )
 
 
+@login_required()
 def message(request):
     """Renders the messaging page."""
     assert isinstance(request, HttpRequest)
-    if request.user.is_authenticated():
-        return render(
-            request,
-            'app/message.html',
-            context={
-                'title': 'Messages Home',
-                'year': datetime.now().year,
-            }
-        )
-    else:
-       return HttpResponseRedirect('/')
+    return render(
+        request,
+        'app/message.html',
+        context={
+            'title': 'Messages Home',
+            'year': datetime.now().year,
+        }
+    )
 
 
-
-
+@login_required()
 def compose(request):
     """Renders the new message page."""
-    # assert isinstance(request, HttpRequest)
-    if request.user.is_authenticated():
-        if request.method == 'POST':
-            form = MessageForm(request.POST)
-            if form.is_valid():
-                # new_message = Message.objects.create()
-                subject = request.POST.get('subject', '')
-                content = request.POST.get('content', '')
-                sender = request.user
-                receiver = request.POST.get('receiver', '')
-                message_obj = Message(subject=subject, content=content)
-                message_obj.save()
-                return HttpResponseRedirect('new_messages')
-        else:
-            form = MessageForm
-        return render(
-            request,
-            'app/compose.html',
-            context={
-                'title': 'New Message',
-                'message': 'Write a new message',
-                'year': datetime.now().year,
-            }
-        )
+    assert isinstance(request, HttpRequest)
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            # new_message = Message.objects.create()
+            subject = request.POST.get('subject', '')
+            content = request.POST.get('content', '')
+            sender = request.user
+            receiver = request.POST.get('receiver', '')
+            message_obj = Message(subject=subject, content=content)
+            message_obj.save()
+            return HttpResponseRedirect('new_messages')
     else:
-        return HttpResponseRedirect('/')
+        form = MessageForm
+    return render(
+        request,
+        'app/compose.html',
+        context={
+            'title': 'New Message',
+            'message': 'Write a new message',
+            'year': datetime.now().year,
+        }
+    )
 
 
+@login_required()
 def inbox(request):
     """Renders the inbox page."""
     assert isinstance(request, HttpRequest)
-    if request.user.is_authenticated():
-        return render(
-            request,
-            'app/inbox.html',
-            context={
-                'title': 'Your Inbox',
-                'message': 'inbox',
-                'year': datetime.now().year,
-            }
-        )
-    else:
-        return HttpResponseRedirect('/')
+    return render(
+        request,
+        'app/inbox.html',
+        context={
+            'title': 'Your Inbox',
+            'message': 'inbox',
+            'year': datetime.now().year,
+        }
+    )
 
 
+@login_required()
 def new_messages(request):
     """Renders the new message notification page."""
     assert isinstance(request, HttpRequest)
-    if request.user.is_authenticated():
-        return render(
-            request,
-            'app/new_messages.html',
-            context={
-                'title': 'Your new messages',
-                'message': 'new messages',
-                'year': datetime.now().year,
-            }
-        )
-    else:
-        return HttpResponseRedirect('/')
+    return render(
+        request,
+        'app/new_messages.html',
+        context={
+            'title': 'Your new messages',
+            'message': 'new messages',
+            'year': datetime.now().year,
+        }
+    )
 
 
+@login_required()
 def outbox(request):
     """Renders the outbox page."""
     assert isinstance(request, HttpRequest)
-    if request.user.is_authenticated():
-        return render(
-            request,
-            'app/outbox.html',
-            context={
-                'title': 'Your outbox',
-                'message': 'outbox',
-                'year': datetime.now().year,
-            }
-        )
-    else:
-        return HttpResponseRedirect('/')
+    return render(
+        request,
+        'app/outbox.html',
+        context={
+            'title': 'Your outbox',
+            'message': 'outbox',
+            'year': datetime.now().year,
+        }
+    )
 
 
+@login_required()
 def trash(request):
     """Renders the signup page."""
     assert isinstance(request, HttpRequest)
-    if request.user.is_authenticated():
-        return render(
-            request,
-            'app/trash.html',
-            context={
-                'title': 'your trash',
-                'message': 'trash',
-                'year': datetime.now().year,
-            }
-        )
-    else:
-        return HttpResponseRedirect('/')
+    return render(
+        request,
+        'app/trash.html',
+        context={
+            'title': 'your trash',
+            'message': 'trash',
+            'year': datetime.now().year,
+        }
+    )
 
 
+@login_required()
 def view(request):
     """Renders the trash page."""
     assert isinstance(request, HttpRequest)
+<<<<<<< HEAD
     if request.user.is_authenticated():
         return render(
             request,
@@ -260,3 +248,14 @@ def userlist(request):
     else:
         pass
     return render(request, 'create_group.html', {'user': user})
+=======
+    return render(
+        request,
+        'app/view.html',
+        context={
+            'title': 'View',
+            'message': 'single message',
+            'year': datetime.now().year,
+        }
+    )
+>>>>>>> a3ee4f84bc3441b848062370224974556d073291
