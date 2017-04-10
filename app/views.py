@@ -196,20 +196,18 @@ def trash(request):
 def view(request):
     """Renders the trash page."""
     assert isinstance(request, HttpRequest)
-<<<<<<< HEAD
-    if request.user.is_authenticated():
-        return render(
-            request,
-            'app/view.html',
-            context={
-                'title': 'View',
-                'message': 'single message',
-                'year': datetime.now().year,
-            }
-        )
-    else:
-        return HttpResponseRedirect('/')
+    return render(
+        request,
+        'app/view.html',
+        context={
+            'title': 'View',
+            'message': 'single message',
+            'year': datetime.now().year,
+        }
+    )
 
+
+@login_required()
 def group(request):
     """Renders the groups page."""
     assert isinstance(request, HttpRequest)
@@ -225,6 +223,8 @@ def group(request):
     else:
         return HttpResponseRedirect('/')
 
+
+@login_required()
 def create_group(request):
     """Renders the new group page."""
     assert isinstance(request, HttpRequest)
@@ -240,6 +240,7 @@ def create_group(request):
     else:
         return HttpResponseRedirect('/')
 
+
 def userlist(request):
     context = RequestContext(request)
     if request.method == 'GET':
@@ -248,14 +249,3 @@ def userlist(request):
     else:
         pass
     return render(request, 'create_group.html', {'user': user})
-=======
-    return render(
-        request,
-        'app/view.html',
-        context={
-            'title': 'View',
-            'message': 'single message',
-            'year': datetime.now().year,
-        }
-    )
->>>>>>> a3ee4f84bc3441b848062370224974556d073291

@@ -11,18 +11,6 @@
 </head>
 
 <body>
-<<<<<<< HEAD
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a href="/" class="navbar-brand">Application name</a>
-            </div>
-=======
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
@@ -42,6 +30,7 @@
                         <li><a href="{% url 'contact' %}">Contact</a></li>
                         <li><a href="{% url 'reports' %}">Reports</a></li>
                         <li><a href="{% url 'message' %}">Messages</a></li>
+                        <li><a href="{% url 'group' %}">Groups</a></li>
                         <li><a href="{% url 'site_manager' %}">Manage Site</a></li>
                     </ul>
                     {% include 'app/loginpartial.html' %}
@@ -54,32 +43,22 @@
                         <li><a href="{% url 'contact' %}">Contact</a></li>
                         <li><a href="{% url 'reports' %}">Reports</a></li>
                         <li><a href="{% url 'message' %}">Messages</a></li>
+                        <li><a href="{% url 'group' %}">Groups</a></li>
                     </ul>
                     {% include 'app/loginpartial.html' %}
                 </div>
             {% endif %}
-
         {% else %}
->>>>>>> a3ee4f84bc3441b848062370224974556d073291
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="{% url 'home' %}">Home</a></li>
                     <li><a href="{% url 'about' %}">About</a></li>
-<<<<<<< HEAD
-                    <li><a href="{% url 'reports' %}">Reports</a></li>
-                    <li><a href="{% url 'message' %}">Messages</a></li>
-                    <li><a href="{% url 'group' %}">Groups</a></li>
-                </ul>
-                {% include 'app/loginpartial.html' %}
-            </div>
-        </div>
-=======
                     <li><a href="{% url 'contact' %}">Contact</a></li>
                 </ul>
                 {% include 'app/loginpartial.html' %}
             </div>
+        </div>
         {% endif %}
->>>>>>> a3ee4f84bc3441b848062370224974556d073291
     </div>
 </div>
 
