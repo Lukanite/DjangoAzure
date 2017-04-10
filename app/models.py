@@ -7,6 +7,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
+#from django_messages import models
 from django.utils import timezone
 
 class Profile(models.Model):
@@ -20,14 +22,22 @@ class Profile(models.Model):
         return  "Username:" + self.user.username + " User_Type:" + self.user_type
 
 class Message(models.Model):
-    sender = models.ForeignKey(User, related_name="sender")
+    sender = models.ForeignKey(User, related_name="sender", default=3)
     receiver = models.ForeignKey(User, related_name="receiver")
-    subject = models.CharField(max_length=200)
-    content = models.TextField()
-    send_date = models.DateTimeField(default=timezone.now)
+    subject = models.CharField(name="subject", max_length=200)
+    content = models.TextField(name="content", max_length=300)
+
+    def get_prep_value(self, value):
+        return (''.join([''.join(l) for l in (
+            value.sender, value.receiver, value.subject, value.content)]))
+
+    def get_db_prep_value(self, value, connection, prepared=False):
+        value = super(BinaryField, self).get_db_prep_value(value, connection, prepared)
+        if value is not None:
+            return (connection.Database.Binary(value))
+        return (value)
 
     def store(self):
-        self.send_date = timezone.now()
         self.save()
 
     def __str__(self):

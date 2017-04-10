@@ -9,7 +9,8 @@ from app.views import *
 from app.models import *
 from reports.views import reportlist
 from django.contrib.auth.views import *
-
+#from django_messages import urls
+#from django_messages.views import *
 
 # Uncomment the next lines to enable the admin:
 from django.conf.urls import include
@@ -36,14 +37,14 @@ urlpatterns = [
     url(r'^signup', signup, name='signup'),
     url(r'^reports$', reportlist, name='reports'),
     url(r'^reports/', include('reports.urls')),
-    url(r'^message', message, name='message'),
+    # url(r'^messages$', messages, name='messages'),
     url(r'^messages/', include('django_messages.urls')),
-    url(r'^compose', compose, name='compose'),
-    url(r'^inbox', inbox, name='inbox'),
-    url(r'^new_messages', new_messages, name='new_messages'),
-    url(r'^outbox', outbox, name='outbox'),
-    url(r'^trash', trash, name='trash'),
-    url(r'^view', view, name='view'),
+    # url(r'^compose', compose, name='compose'),
+    # url(r'^inbox', inbox, name='inbox'),
+    # url(r'^new_messages', new_messages, name='new_messages'),
+    # url(r'^outbox', outbox, name='outbox'),
+    # url(r'^trash', trash, name='trash'),
+    # url(r'^view', view, name='view'),
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

@@ -23,9 +23,11 @@ class BootstrapAuthenticationForm(AuthenticationForm):
                                    'placeholder':'Password'}))
 
 class MessageForm(forms.ModelForm):
+
     class Meta:
         model = Message
-        fields = ('subject', 'content', 'sender', 'receiver', 'send_date')
+        exclude = ['sender']
+        #fields = ('recipient', 'subject', 'content', 'sender',)
 
    # subject = forms.CharField(required=True, label='Message Subject')
     #message_body = forms.CharField(required=True, label='Message Body', widget=forms.Textarea)
