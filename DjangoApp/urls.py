@@ -10,6 +10,7 @@ from app.models import *
 from reports.views import reportlist
 from django.contrib.auth.views import *
 from site_manager.views import manage_users
+from groups.views import *
 #File uploads
 from django.conf import settings
 from django.conf.urls.static import static
