@@ -17,7 +17,7 @@ def is_site_manager(user):
 @login_required()
 @user_passes_test(is_site_manager, login_url='/', redirect_field_name="")
 @csrf_exempt
-def site_manager(request):
+def manage_users(request):
     assert isinstance(request, HttpRequest)
     users = User.objects.all()
 
@@ -40,9 +40,9 @@ def site_manager(request):
         promoted_user.save()
 
     return render(
-        request, 'site_manager/site_manager.html',
+        request, 'site_manager/manage_users.html',
         {
-            'title': 'Site Manager', 'message': 'This Page is only for site managers',
+            'title': 'Manage Users', 'message': 'Suspend or Promote Users',
             'year': datetime.now().year, 'users': users
         }
     )

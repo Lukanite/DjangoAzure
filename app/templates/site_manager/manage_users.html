@@ -2,10 +2,9 @@
 
 {% block content %}
 
-    <h2>{{ title }}.</h2>
+    <h2>{{ title }}</h2>
     <h3>{{ message }}</h3>
 
-    <p>Use this area to provide additional information.</p>
     <table class="table table-striped">
         <tr>
             <th>User Name</th>
@@ -30,15 +29,29 @@
                     {% endif %}
 
                     {% if u.is_active %}
-                        <td>
-                            <form action="" method="POST">
-                                <button class="btn btn-danger" name="suspend" value="{{ u.username }}">Suspend</button>
-                            </form>
-                        </td>
+                        {% if u.profile.user_type == "site_manager" %}
+                            <td>
+                                <form action="" method="POST">
+                                    <button class="btn btn-danger disabled" name="suspend" value="{{ u.username }}">
+                                        Suspend
+                                    </button>
+                                </form>
+                            </td>
+                        {% else %}
+                            <td>
+                                <form action="" method="POST">
+                                    <button class="btn btn-danger" name="suspend" value="{{ u.username }}">
+                                        Suspend
+                                    </button>
+                                </form>
+                            </td>
+                        {% endif %}
                     {% else %}
                         <td>
                             <form action="" method="POST">
-                                <button class="btn btn-success" name="restore" value="{{ u.username }}">Restore</button>
+                                <button class="btn btn-success" name="restore" value="{{ u.username }}">
+                                    Restore
+                                </button>
                             </form>
                         </td>
                     {% endif %}
