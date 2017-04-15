@@ -24,6 +24,7 @@ def groups(request):
         for g in all_groups:
             if request.user.groups.filter(name=g.name).exists():
                 groups.append(g)
+
     # if (request.POST.get('suspend')):
     #     suspended_user = request.POST.get('suspend')
     #     suspended_user = users.get(username=suspended_user)
@@ -49,7 +50,7 @@ def create_group(request):
             new_group = Group.objects.create(**group_form.cleaned_data)
             new_group.save()
             new_group.user_set.add(request.user)
-            #return HttpResponseRedirect('/groups')
+            return HttpResponseRedirect('/groups')
     else:
         group_form = GroupForm()
     return render(
