@@ -3,47 +3,66 @@
 {% block content %}
 
     <h2>{{ title }}</h2>
-    <h3>{{ message }}</h3>
 
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <meta charset="UTF-8">
-        <title>Title</title>
-    </head>
-    <body>
-
-    <form method="post" action="">
-        {% for field in user_form %}
-            {% if field.errors %}
-                <div class="control-group error">
-                    <label class="control-label">{{ field.label }}</label>
-                    <div class="controls">{{ field }}
-                        <span class="help-inline">
-                            {% for error in  field.errors %}{{ error }}{% endfor %}
-                        </span>
-                    </div>
-                </div>
-            {% else %}
-                <div class="control-group">
-                    <label class="control-label">{{ field.label }}</label>
-                    <div class="controls">{{ field }}
-                        {% if field.help_text %}
-                            <p class="help-inline">
-                                <small>{{ field.help_text }}</small>
-                            </p>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endif %}
+    <table class="table table-striped">
+        <tr>
+            <th>Group Name</th>
+            <th>Add User</th>
+            <th>Leave Group</th>
+        </tr>
+        {% for g in groups %}
+            <tr>
+                <td>{{ g.name }}</td>
+                <td>
+                    <form action="" method="POST">
+                        <button class="btn btn-primary " name="add" value="{{ g.name }}">
+                            g.name
+                        </button>
+                    </form>
+                </td>
+                <td>
+                    <form action="" method="POST">
+                        <button class="btn btn-danger" name="leave" value="{{ g.name }}">
+                            Leave
+                        </button>
+                    </form>
+                </td>
+            </tr>
         {% endfor %}
-        <br>
-        {{ user_profile_form.as_p }}
-        <button type="submit" class="btn btn-primary">Create a User</button>
-    </form>
-    </body>
-    </html>
-
+    </table>
 
 {% endblock %}
+
+
+
+
+
+
+
+
+{#{% extends "app/layout.html" %}#}
+{##}
+{#{% block content %}#}
+{##}
+{#<h2>{{ title }}</h2>#}
+{#<div class="row">#}
+{#    <div class="col-md-8">#}
+{#        <ul class="list-group">#}
+{#            {% for group in groups %}#}
+{#            <li class="list-group-item"></li>#}
+{#            {% endfor %}#}
+{#        </ul>#}
+{#        <a href="create_group.html">Create new group.</a>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#{% endblock %}#}
+{##}
+{##}
+{#{% block scripts %}#}
+{##}
+{#    {% load staticfiles %}#}
+{#<script src="{% static 'app/scripts/jquery.validate.min.js' %}">#}
+{#</script>#}
+{##}
+{#{% endblock %}#}
