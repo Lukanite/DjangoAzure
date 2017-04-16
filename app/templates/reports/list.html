@@ -1,11 +1,31 @@
 {% extends "app/layout.html" %}
-
+{% load staticfiles %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'app/content/jquery.dataTables.min.css' %}"/>
+{% endblock %}
 {% block content %}
 <h1>Report View</h1>
-<ul class="list-group">
+<table id="reportlist" class="table table-striped">
+    <thead>
+        <tr>
+            <th>Report Name</th>
+            <th>Company Name</th>
+            <th>Release Date</th>
+        </tr>
+    </thead>
+    <tbody> 
     {% for report in reports %}
-    <li class="list-group-item"><a href="{% url 'reports' %}/{{report.pk}}">{{ report.name }}</a></li>
+    <tr><td><a href="{% url 'reports' %}/{{report.pk}}">{{ report.name }}</a></td><td>{{report.company_name}}</td><td>{{report.release_date}}</td></tr>
     {% endfor %}
-</ul>
+    </tbody>
+</table>
 <a class="btn btn-primary" href="{% url 'reports' %}/new" role="button">New Report</a>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'app/scripts/jquery.dataTables.min.js' %}"></script>
+<script>
+$(document).ready(function(){
+    $('#reportlist').dataTable();
+});
+</script>
 {% endblock %}
