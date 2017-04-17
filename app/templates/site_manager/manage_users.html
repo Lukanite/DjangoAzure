@@ -1,0 +1,75 @@
+{% extends "app/layout.html" %}
+
+{% block content %}
+
+    <h2>{{ title }}</h2>
+    <h3>{{ message }}</h3>
+
+    <table class="table table-striped">
+        <tr>
+            <th>User Name</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>User Type</th>
+            <th>Restore/Suspend Account</th>
+            <th>Promote to Site Manager</th>
+        </tr>
+        {% for u in users %}
+            {% if u != user %}
+                <tr>
+                    <td>{{ u.username }}</td>
+                    <td>{{ u.first_name }}</td>
+                    <td>{{ u.last_name }}</td>
+                    {% if u.profile.user_type == "company_user" %}
+                        <td> Company User</td>
+                    {% elif u.profile.user_type == "investor_user" %}
+                        <td> Investor User</td>
+                    {% else %}
+                        <td> Site Manager</td>
+                    {% endif %}
+
+                    {% if u.is_active %}
+                        {% if u.profile.user_type == "site_manager" %}
+                            <td>
+                                <form action="" method="POST">
+                                    <button class="btn btn-danger disabled" name="suspend" value="{{ u.username }}">
+                                        Suspend
+                                    </button>
+                                </form>
+                            </td>
+                        {% else %}
+                            <td>
+                                <form action="" method="POST">
+                                    <button class="btn btn-danger" name="suspend" value="{{ u.username }}">
+                                        Suspend
+                                    </button>
+                                </form>
+                            </td>
+                        {% endif %}
+                    {% else %}
+                        <td>
+                            <form action="" method="POST">
+                                <button class="btn btn-success" name="restore" value="{{ u.username }}">
+                                    Restore
+                                </button>
+                            </form>
+                        </td>
+                    {% endif %}
+
+                    {% if u.profile.user_type == "site_manager" %}
+                        <td>
+                            <button class="btn btn-primary disabled">Promote</button>
+                        </td>
+                    {% else %}
+                        <td>
+                            <form action="" method="POST">
+                                <button class="btn btn-primary" name="promote" value="{{ u.username }}">Promote</button>
+                            </form>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+
+{% endblock %}

@@ -7,6 +7,7 @@
     {% load staticfiles %}
     <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.min.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'app/content/site.css' %}"/>
+    {% block styles %}{% endblock %}
     <script src="{% static 'app/scripts/modernizr-2.6.2.js' %}"></script>
 </head>
 
@@ -30,8 +31,8 @@
                         <li><a href="{% url 'contact' %}">Contact</a></li>
                         <li><a href="{% url 'reports' %}">Reports</a></li>
                         <li><a href="{% url 'messages_home' %}">Messages</a></li>
-                        <li><a href="{% url 'group' %}">Groups</a></li>
-                        <li><a href="{% url 'site_manager' %}">Manage Site</a></li>
+                        <li><a href="{% url 'groups' %}">Groups</a></li>
+                        <li><a href="{% url 'manage_users' %}">Manage Users</a></li>
                     </ul>
                     {% include 'app/loginpartial.html' %}
                 </div>
@@ -43,7 +44,7 @@
                         <li><a href="{% url 'contact' %}">Contact</a></li>
                         <li><a href="{% url 'reports' %}">Reports</a></li>
                         <li><a href="{% url 'messages_home' %}">Messages</a></li>
-                        <li><a href="{% url 'group' %}">Groups</a></li>
+                        <li><a href="{% url 'groups' %}">Groups</a></li>
                     </ul>
                     {% include 'app/loginpartial.html' %}
                 </div>
