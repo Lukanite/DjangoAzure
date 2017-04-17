@@ -13,6 +13,7 @@ import base64
 from django_messages.models import Message
 from django_messages.forms import ComposeForm
 from django_messages.utils import format_quote, get_user_model, get_username_field
+from django_messages.templatetags import inbox
 
 import os
 from Crypto import Random
@@ -34,11 +35,13 @@ def home(request, template_name='django_messages/base.html'):
 
 @login_required
 def inbox(request, template_name='django_messages/inbox.html'):
+
     """
     Displays a list of received messages for the current user.
     Optional Arguments:
         ``template_name``: name of the template to use.
     """
+    #context = {'inbox_count': inbox_count,}
     message_list = Message.objects.inbox_for(request.user)
     return render(request, template_name, {
         'message_list': message_list,
