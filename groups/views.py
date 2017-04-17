@@ -72,8 +72,15 @@ def create_group(request):
 @login_required()
 @csrf_exempt
 def group_users(request, name):
-    group = Group.objects.get(name=name)
     users = User.objects.all()
+    user_in_group = []
+    user_not_in_group = []
+
+    for u in users:
+        if u.groups.filter(name=name).exists():
+            user_in_group.append(u)
+        else:
+            user_not_in_group.append(u)
 
     return render(
         request,
@@ -81,7 +88,8 @@ def group_users(request, name):
         context={
             'title': 'Manage Users in Group: ' + name,
             'year': datetime.now().year,
-            'group' : group,
             'users' : users,
+            'user_in_group': user_in_group,
+            'user_not_in_group': user_not_in_group
         }
     )

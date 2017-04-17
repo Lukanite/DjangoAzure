@@ -4,21 +4,14 @@ Definition of views.
 
 from django.shortcuts import render
 from django.http import HttpRequest
-from django.template import RequestContext
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 
 #from .forms import MessageForm
 
-from django.template import loader
-
-from app.forms import UserForm, ProfileForm
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 
-from django.http import HttpResponse, Http404
 from app.forms import UserForm, ProfileForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
