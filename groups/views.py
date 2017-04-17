@@ -71,7 +71,7 @@ def create_group(request):
 
 @login_required()
 @csrf_exempt
-def manage_users(request, name):
+def group_users(request, name):
     group = Group.objects.get(name=name)
 
     return render(

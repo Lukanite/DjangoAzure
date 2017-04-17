@@ -48,6 +48,7 @@ urlpatterns = [
     url(r'^outbox', outbox, name='outbox'),
     url(r'^trash', trash, name='trash'),
     url(r'^view', view, name='view'),
+    url(r'^manage_users', manage_users, name='manage_users'),
     url(r'^groups$', groups, name='groups'),
     url(r'^create_group', create_group, name='create_group'),
     url(r'^groups/', include('groups.urls')),
