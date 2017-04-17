@@ -35,3 +35,4 @@ class Report(models.Model):
     isprivate = models.BooleanField(default=True)
     release_date = models.DateField(auto_now_add=True)
     attachment = models.FileField(upload_to='reports/', blank=True)
+    attachmenthash = models.CharField(max_length=60, blank=True, null=True)

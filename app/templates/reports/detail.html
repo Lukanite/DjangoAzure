@@ -16,6 +16,7 @@
     <tr><th scope="row">Release Date</th><td>{{ report.release_date }}</td></tr>
     {% if report.attachment %}
     <tr><th scope="row">Attached File: </th><td><a href="{{ report.attachment.url }}">{{ report.attachment.name }}</a></td></tr>
+    <tr><th scope="row">File Hash (md5):</th><td>{{ report.attachmenthash }}</td></tr>
     {% else %}
     <tr><th scope="row">Attached File: </th><td>No file attached.</td></tr>
     {% endif %}
