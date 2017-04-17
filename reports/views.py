@@ -29,7 +29,7 @@ def newreport(request):
     if request.method == 'POST':
         filledform = ReportForm(request.POST, request.FILES)
         report = filledform.save(commit=False)
-        if report.attachment != None:
+        if report.attachment:
             report.attachmenthash = get_hash(report.attachment)
         report.save()
         return HttpResponseRedirect('/reports/' + str(report.pk))
@@ -42,7 +42,7 @@ def editreport(request, report_id):
     if request.method == 'POST':
         filledform = ReportForm(request.POST, request.FILES, instance=report)
         report = filledform.save(commit=False)
-        if report.attachment != None:
+        if report.attachment:
             report.attachmenthash = get_hash(report.attachment)
         report.save()
         return HttpResponseRedirect('/reports/' + str(report_id))
