@@ -8,9 +8,16 @@ from django.utils import timezone
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
+import base64
+
 from django_messages.models import Message
 from django_messages.forms import ComposeForm
 from django_messages.utils import format_quote, get_user_model, get_username_field
+
+import os
+from Crypto import Random
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import AES
 
 User = get_user_model()
 
@@ -217,8 +224,7 @@ def view(request, message_id, form_class=ComposeForm, quote_helper=format_quote,
     if message.read_at is None and message.recipient == user:
         message.read_at = now
         message.save()
-
-    context = {'message': message, 'reply_form': None}
+    context = {'message': message, 'reply_form': None, 'is_encrypted': message.is_encrypted,}
     if message.recipient == user:
         form = form_class(initial={
             'body': quote_helper(message.sender, message.body),
@@ -227,3 +233,27 @@ def view(request, message_id, form_class=ComposeForm, quote_helper=format_quote,
             })
         context['reply_form'] = form
     return render(request, template_name, context)
+
+@login_required
+def decrypt(request, message_id, success_url=None):
+
+    user = request.user
+    message = get_object_or_404(Message, id=message_id)
+    decrypted = False
+    if success_url is None:
+        success_url = reverse('messages_detail', args=[message_id])
+    if 'next' in request.GET:
+        success_url = request.GET['next']
+    body = message.body
+    key = "0123456789123456"
+    aes = AES.new(key, AES.MODE_ECB)
+    message.body = aes.decrypt(base64.b64decode(body))
+    message.is_encrypted = False
+    decrypted = True
+    if decrypted:
+        message.save()
+        messages.info(request, _(u"Message successfully decrypted."))
+        if notification:
+            notification.send([user], "messages_detail", {'message': message,})
+        return HttpResponseRedirect(success_url)
+    raise Http404

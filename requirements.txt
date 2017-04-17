@@ -2,3 +2,4 @@ django<1.10
 gunicorn
 whitenoise
 django_messages
+pycrypto
