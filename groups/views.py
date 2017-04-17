@@ -16,6 +16,7 @@ from groups.forms import GroupForm
 from django.contrib.auth.models import Group, User
 
 @login_required()
+@csrf_exempt
 def groups(request):
     assert isinstance(request, HttpRequest)
     all_groups = Group.objects.all()
@@ -27,11 +28,13 @@ def groups(request):
             if request.user.groups.filter(name=g.name).exists():
                 groups.append(g)
 
-    # if (request.POST.get('suspend')):
-    #     suspended_user = request.POST.get('suspend')
-    #     suspended_user = users.get(username=suspended_user)
-    #     suspended_user.is_active = False
-    #     suspended_user.save()
+    if (request.POST.get('leave')):
+        leave_group = Group.objects.get(name=request.POST.get('leave'))
+        leave_group.user_set.remove(request.user)
+        return HttpResponseRedirect('/groups')
+
+    if(request.POST.get('manage')):
+        return HttpResponseRedirect('/groups/' + request.POST.get('manage'))
 
     return render(
         request, 'groups/group.html',
@@ -66,22 +69,17 @@ def create_group(request):
         }
     )
 
-'''
 @login_required()
 @csrf_exempt
-def userlist(request):
-    context = RequestContext(request)
-    user = User.objects.all()
-    if request.method == 'GET':
-        users = UserForm(request.GET)
-        user = User.objects.all()
-    else:
-        pass
-    return render(request, 'groups/userlist.html', {'user': user})
-'''
+def manage_users(request, name):
+    group = Group.objects.get(name=name)
 
-@login_required()
-@csrf_exempt
-def userlist(request):
-    users = User.objects.all()
-    return render(request, 'groups/userlist.html', {'users': users})
+    return render(
+        request,
+        'groups/detail.html',
+        context={
+            'title': 'Manage Users in Group: ' + name,
+            'year': datetime.now().year,
+            'group' : group,
+        }
+    )
