@@ -22,6 +22,7 @@
             </button>
             <a href="/" class="navbar-brand">Lokahi Crowdfunding</a>
         </div>
+        {% load inbox %}
         {% if user.is_authenticated %}
             {% if user.profile.user_type == 'site_manager'%}
                 <div class="navbar-collapse collapse">
@@ -30,7 +31,7 @@
                         <li><a href="{% url 'about' %}">About</a></li>
                         <li><a href="{% url 'contact' %}">Contact</a></li>
                         <li><a href="{% url 'reports' %}">Reports</a></li>
-                        <li><a href="{% url 'messages_home' %}">Messages</a></li>
+                        <li><a href="{% url 'messages_home' %}">Messages ({% inbox_count %})</a></li>
                         <li><a href="{% url 'groups' %}">Groups</a></li>
                         <li><a href="{% url 'manage_users' %}">Manage Users</a></li>
                     </ul>
@@ -43,7 +44,7 @@
                         <li><a href="{% url 'about' %}">About</a></li>
                         <li><a href="{% url 'contact' %}">Contact</a></li>
                         <li><a href="{% url 'reports' %}">Reports</a></li>
-                        <li><a href="{% url 'messages_home' %}">Messages</a></li>
+                        <li><a href="{% url 'messages_home' %}">Messages ({% inbox_count %})</a></li>
                         <li><a href="{% url 'groups' %}">Groups</a></li>
                     </ul>
                     {% include 'app/loginpartial.html' %}
