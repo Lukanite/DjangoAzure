@@ -1,11 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    {{ title }}
-</head>
-<body>
+{% extends "app/layout.html" %}
+{% csrf_token %}
+{% block content %}
 
-</body>
-</html>
+    <h2>{{ title }}</h2>
+
+    <table class="table table-striped">
+        <tr>
+            <th>User Name</th>
+            <th>Add</th>
+            <th>Remove</th>
+        </tr>
+        {% for u in users %}
+            <tr>
+                <td>{{ u.username }}</td>
+                <td>
+                    <form action="" method="POST">
+                        <button class="btn btn-success" name="add" value="{{ u.username }}">
+                            Add
+                        </button>
+                    </form>
+                </td>
+                <td>
+                    <form action="" method="POST">
+                        <button class="btn btn-danger" name="remove" value="{{ u.username }}">
+                            Remove
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+
+{##}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Title</title>#}
+{#    {{ title }}#}
+{#</head>#}
+{#<body>#}
+{##}
+{#</body>#}
+{#</html>#}

@@ -73,6 +73,7 @@ def create_group(request):
 @csrf_exempt
 def group_users(request, name):
     group = Group.objects.get(name=name)
+    users = User.objects.all()
 
     return render(
         request,
@@ -81,5 +82,6 @@ def group_users(request, name):
             'title': 'Manage Users in Group: ' + name,
             'year': datetime.now().year,
             'group' : group,
+            'users' : users,
         }
     )
