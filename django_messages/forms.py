@@ -3,6 +3,12 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 
+import os
+from Crypto import Random
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import AES
+import base64
+
 if "notification" in settings.INSTALLED_APPS and getattr(settings, 'DJANGO_MESSAGES_NOTIFY', True):
     from notification import models as notification
 else:
@@ -19,7 +25,7 @@ class ComposeForm(forms.Form):
     subject = forms.CharField(label=_(u"Subject"), max_length=140)
     body = forms.CharField(label=_(u"Body"),
         widget=forms.Textarea(attrs={'rows': '12', 'cols':'55'}))
-
+    encrypt = forms.BooleanField(required=False)
 
     def __init__(self, *args, **kwargs):
         recipient_filter = kwargs.pop('recipient_filter', None)
@@ -32,6 +38,13 @@ class ComposeForm(forms.Form):
         recipients = self.cleaned_data['recipient']
         subject = self.cleaned_data['subject']
         body = self.cleaned_data['body']
+        encrypt = self.cleaned_data['encrypt']
+        if encrypt:
+            key = "0123456789123456"
+            aes = AES.new(key, AES.MODE_ECB)
+            if len(body) % 16 != 0:
+                body = body.rjust(len(body) + 16 - len(body)%16)
+            body = base64.b64encode(aes.encrypt(body))
         message_list = []
         for r in recipients:
             msg = Message(
@@ -39,6 +52,7 @@ class ComposeForm(forms.Form):
                 recipient = r,
                 subject = subject,
                 body = body,
+                is_encrypted = encrypt
             )
             if parent_msg is not None:
                 msg.parent_msg = parent_msg

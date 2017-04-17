@@ -4,13 +4,13 @@
 {% block content %}
 <h1>{% trans "View Message" %}</h1>
 <dl class="message-headers">
-    <dt>{% trans "Subject" %}</dt>
-    <dd><strong>{{ message.subject }}</strong></dd>
-    <dt>{% trans "Sender" %}</dt>
-    <dd>{{ message.sender }}</dd>
-    <dt>{% trans "Date" %} </dt>
-    <dd>{{ message.sent_at|date:_("DATETIME_FORMAT")}}</dd>
-    <dt>{% trans "Recipient" %}</dt>
+    <dt>{% trans "Subject:" %}</dt>
+    <dd><strong>{{ message.subject }}</strong></dd><br>
+    <dt>{% trans "Sender:" %}</dt>
+    <dd>{{ message.sender }}</dd><br>
+    <dt>{% trans "Date:" %} </dt>
+    <dd>{{ message.sent_at|date:_("DATETIME_FORMAT")}}</dd><br>
+    <dt>{% trans "Recipient:" %}</dt>
     <dd>{{ message.recipient }}</dd>
 </dl>
 {{ message.body|linebreaksbr }}<br /><br />
@@ -19,6 +19,10 @@
 <a href="{% url 'messages_reply' message.id %}">{% trans "Reply" %}</a>
 {% endifequal %}
 <a href="{% url 'messages_delete' message.id %}">{% trans "Delete" %}</a>
+
+{% if is_encrypted %}
+<a href="{% url 'messages_decrypt' message.id %}">{% trans "Decrypt" %}</a>
+{% endif %}
 
 {% comment %}Example reply_form integration
 {% if reply_form %}

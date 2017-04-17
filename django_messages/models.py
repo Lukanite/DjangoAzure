@@ -59,6 +59,7 @@ class Message(models.Model):
     replied_at = models.DateTimeField(_("replied at"), null=True, blank=True)
     sender_deleted_at = models.DateTimeField(_("Sender deleted at"), null=True, blank=True)
     recipient_deleted_at = models.DateTimeField(_("Recipient deleted at"), null=True, blank=True)
+    is_encrypted = models.BooleanField(("Message is encrypted"), blank=True, default=False)
 
     objects = MessageManager()
 
