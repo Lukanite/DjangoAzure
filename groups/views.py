@@ -10,8 +10,10 @@ from django.contrib.auth.decorators import login_required
 
 from django.http import HttpResponse, Http404
 
+from app.forms import UserForm
 from groups.forms import GroupForm
-from django.contrib.auth.models import Group
+
+from django.contrib.auth.models import Group, User
 
 @login_required()
 def groups(request):
@@ -35,7 +37,8 @@ def groups(request):
         request, 'groups/group.html',
         {
             'title': 'Your Groups',
-            'year': datetime.now().year, 'groups': groups
+            'year': datetime.now().year,
+            'groups': groups
         }
     )
 
@@ -63,11 +66,22 @@ def create_group(request):
         }
     )
 
+'''
+@login_required()
+@csrf_exempt
 def userlist(request):
     context = RequestContext(request)
+    user = User.objects.all()
     if request.method == 'GET':
         users = UserForm(request.GET)
         user = User.objects.all()
     else:
         pass
-    return render(request, 'groups/create_group.html', {'user': user})
+    return render(request, 'groups/userlist.html', {'user': user})
+'''
+
+@login_required()
+@csrf_exempt
+def userlist(request):
+    users = User.objects.all()
+    return render(request, 'groups/userlist.html', {'users': users})
