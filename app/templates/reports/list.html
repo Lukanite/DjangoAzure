@@ -10,6 +10,8 @@
         <tr>
             <th>Report Name</th>
             <th>Company Name</th>
+            <th>Sector</th>
+            <th>Industry</th> 
             <th>Release Date</th>
         </tr>
     </thead>
@@ -18,6 +20,8 @@
     <tr>
         <td><a href="{% url 'reports' %}/{{report.pk}}">{{ report.name }}</a></td>
         <td>{{report.company_name}}</td>
+        <td>{{report.sector}}</td>
+        <td>{{report.industry}}</td>
         <td>{{report.release_date}}</td></tr>
     {% endfor %}
     </tbody>
