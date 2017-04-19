@@ -14,9 +14,11 @@
     <tr><th scope="row">Industry</th><td>{{ report.industry }}</td></tr>
     <tr><th scope="row">Private</th><td>{{ report.isprivate }}</td></tr>
     <tr><th scope="row">Release Date</th><td>{{ report.release_date }}</td></tr>
-    {% if report.attachment %}
-    <tr><th scope="row">Attached File: </th><td><a href="{{ report.attachment.url }}">{{ report.attachment.name }}</a></td></tr>
-    <tr><th scope="row">File Hash (md5):</th><td>{{ report.attachmenthash }}</td></tr>
+    {% if report.reportattachment_set %}
+    {% for item in report.reportattachment_set.all %}
+    <tr><th scope="row">Attached File: </th><td><a href="{{ item.attachment.url }}">{{ item.attachment.name }}</a></td></tr>
+    <tr><th scope="row">File Hash (md5):</th><td>{{ item.attachmenthash }}</td></tr>
+    {% endfor %}
     {% else %}
     <tr><th scope="row">Attached File: </th><td>No file attached.</td></tr>
     {% endif %}

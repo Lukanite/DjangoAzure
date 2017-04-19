@@ -4,7 +4,7 @@
 <h1>New Report</h1>
 <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
         {{ mainform.as_p }}
-        <p><label for="id_attachment">Attachment(s):</label> <input id="id_attachment" name="attachment" type="file" multiple /></p>
+        {{ formset }}
         <button type="submit" class="save btn btn-default">Save</button>
 </form>
 {% endblock %}
