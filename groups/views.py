@@ -3,6 +3,7 @@ from django.http import HttpRequest
 from django.template import RequestContext
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
 
 from django.template import loader
 from django.http import HttpResponseRedirect
@@ -28,12 +29,12 @@ def groups(request):
             if request.user.groups.filter(name=g.name).exists():
                 groups.append(g)
 
-    if (request.POST.get('leave')):
+    if request.POST.get('leave'):
         leave_group = Group.objects.get(name=request.POST.get('leave'))
         leave_group.user_set.remove(request.user)
         return HttpResponseRedirect('/groups')
 
-    if(request.POST.get('manage')):
+    if request.POST.get('manage'):
         return HttpResponseRedirect('/groups/' + request.POST.get('manage'))
 
     return render(
@@ -81,6 +82,18 @@ def group_users(request, name):
             user_in_group.append(u)
         else:
             user_not_in_group.append(u)
+
+    if request.POST.get('add'):
+        group = Group.objects.get(name=name)
+        user = User.objects.get(username=request.POST.get('add'))
+        group.user_set.add(user)
+        return HttpResponseRedirect('/groups/' + group.name)
+
+    if request.POST.get('remove'):
+        group = Group.objects.get(name=name)
+        user = User.objects.get(username=request.POST.get('remove'))
+        group.user_set.remove(user)
+        return HttpResponseRedirect('/groups/' + group.name)
 
     return render(
         request,
