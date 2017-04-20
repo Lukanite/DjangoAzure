@@ -4,6 +4,8 @@ from .models import Report, ReportAttachment
 from .forms import ReportForm, ReportAttachmentForm
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
+from django.contrib.auth.decorators import user_passes_test
+from django.views.decorators.csrf import csrf_exempt
 import hashlib
 
 def get_hash(file):
@@ -12,6 +14,8 @@ def get_hash(file):
         md5.update(c)
     return md5.hexdigest()
 
+def not_investor_user(user):
+    return not user.profile.user_type == "investor_user"
 # Create your views here.
 
 @login_required()
@@ -20,12 +24,17 @@ def reportlist(request):
     return render(request, 'reports/list.html', {'reports': reports})
 
 @login_required()
-
+@csrf_exempt
 def detail(request, report_id):
     report = get_object_or_404(Report, pk=report_id)
+    if (request.POST.get('delete')):
+        deleted_report = Report.objects.get(id=report_id)
+        deleted_report.delete()
+        return HttpResponseRedirect('/reports')
     return render(request, 'reports/detail.html', {'report': report})
 
 @login_required()
+@user_passes_test(not_investor_user, login_url='/', redirect_field_name="")
 def newreport(request):
     if request.method == 'POST':
         filledform = ReportForm(request.POST, request.FILES)
