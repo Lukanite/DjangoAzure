@@ -79,7 +79,7 @@ def group_users(request, name):
     user_not_in_group = []
 
     for u in users:
-        if u != request.user:
+        if u != request.user and u.username != "admin":
             if u.groups.filter(name=name).exists():
                 user_in_group.append(u)
             else:
