@@ -20,14 +20,14 @@ from django.contrib.auth.models import Group, User
 @csrf_exempt
 def groups(request):
     assert isinstance(request, HttpRequest)
-    all_groups = Group.objects.all()
     groups = []
-    if request.user.profile.user_type == "site_manager":
-        groups = all_groups
-    else:
-        for g in all_groups:
-            if request.user.groups.filter(name=g.name).exists():
-                groups.append(g)
+    other_groups = []
+    for g in Group.objects.all():
+        if request.user.groups.filter(name=g.name).exists():
+            groups.append(g)
+        else:
+            other_groups.append(g)
+
 
     if request.POST.get('leave'):
         leave_group = Group.objects.get(name=request.POST.get('leave'))
@@ -42,7 +42,8 @@ def groups(request):
         {
             'title': 'Your Groups',
             'year': datetime.now().year,
-            'groups': groups
+            'groups': groups,
+            'other_groups': other_groups
         }
     )
 
@@ -78,10 +79,11 @@ def group_users(request, name):
     user_not_in_group = []
 
     for u in users:
-        if u.groups.filter(name=name).exists():
-            user_in_group.append(u)
-        else:
-            user_not_in_group.append(u)
+        if u != request.user:
+            if u.groups.filter(name=name).exists():
+                user_in_group.append(u)
+            else:
+                user_not_in_group.append(u)
 
     if request.POST.get('add'):
         group = Group.objects.get(name=name)

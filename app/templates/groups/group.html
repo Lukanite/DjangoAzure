@@ -31,40 +31,27 @@
                 </td>
             </tr>
         {% endfor %}
+        {% for g in other_groups %}
+            <tr>
+                <td>
+                    {{ g.name }}
+                </td>
+                <td>
+                    <form action="" method="POST">
+                        <button class="btn btn-primary" name="manage" value="{{ g.name }}">
+                            Manage Users
+                        </button>
+                    </form>
+                </td>
+                <td>
+                    <form action="" method="POST">
+                        <button class="btn btn-danger disabled" name="leave" value="{{ g.name }}">
+                            Leave
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
     </table>
 <a href="create_group.html" class="btn btn-primary">Create a New Group</a>
 {% endblock %}
-
-
-
-
-
-
-
-
-{#{% extends "app/layout.html" %}#}
-{##}
-{#{% block content %}#}
-{##}
-{#<h2>{{ title }}</h2>#}
-{#<div class="row">#}
-{#    <div class="col-md-8">#}
-{#        <ul class="list-group">#}
-{#            {% for group in groups %}#}
-{#            <li class="list-group-item"></li>#}
-{#            {% endfor %}#}
-{#        </ul>#}
-{#        <a href="create_group.html">Create new group.</a>#}
-{#    </div>#}
-{#</div>#}
-{##}
-{#{% endblock %}#}
-{##}
-{##}
-{#{% block scripts %}#}
-{##}
-{#    {% load staticfiles %}#}
-{#<script src="{% static 'app/scripts/jquery.validate.min.js' %}">#}
-{#</script>#}
-{##}
-{#{% endblock %}#}
