@@ -1,39 +1,41 @@
 {% extends "app/layout.html" %}
 {% load staticfiles %}
 {% block styles %}
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.13/datatables.min.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.13/datatables.min.css"/>
 {% endblock %}
 {% block content %}
-<h1>Report View</h1>
-<table id="reportlist" class="table table-striped">
-    <thead>
+    <h1>Report View</h1>
+    <table id="reportlist" class="table table-striped">
+        <thead>
         <tr>
             <th>Report Name</th>
             <th>Company Name</th>
             <th>Sector</th>
-            <th>Industry</th> 
+            <th>Industry</th>
             <th>Release Date</th>
         </tr>
-    </thead>
-    <tbody> 
-    {% for report in reports %}
-    <tr>
-        <td><a href="{% url 'reports' %}/{{report.pk}}">{{ report.name }}</a></td>
-        <td>{{report.company_name}}</td>
-        <td>{{report.sector}}</td>
-        <td>{{report.industry}}</td>
-        <td>{{report.release_date}}</td></tr>
-    {% endfor %}
-    </tbody>
-</table>
-
-<a class="btn btn-primary" href="{% url 'reports' %}/new" role="button">New Report</a>
+        </thead>
+        <tbody>
+        {% for report in reports %}
+            <tr>
+                <td><a href="{% url 'reports' %}/{{ report.pk }}">{{ report.name }}</a></td>
+                <td>{{ report.company_name }}</td>
+                <td>{{ report.sector }}</td>
+                <td>{{ report.industry }}</td>
+                <td>{{ report.release_date }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if user.profile.user_type != "investor_user" %}
+        <a class="btn btn-primary" href="{% url 'reports' %}/new" role="button">New Report</a>
+    {% endif %}
 {% endblock %}
 {% block scripts %}
-<script src="{% static 'app/scripts/jquery.dataTables.min.js' %}"></script>
-<script>
-$(document).ready(function(){
-    $('#reportlist').dataTable();
-});
-</script>
+    <script src="{% static 'app/scripts/jquery.dataTables.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#reportlist').dataTable();
+        });
+    </script>
 {% endblock %}
