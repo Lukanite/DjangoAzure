@@ -15,7 +15,7 @@
             <th>Promote to Site Manager</th>
         </tr>
         {% for u in users %}
-            {% if u != user %}
+            {% if u != user and u.username != "admin" %}
                 <tr>
                     <td>{{ u.username }}</td>
                     <td>{{ u.first_name }}</td>
