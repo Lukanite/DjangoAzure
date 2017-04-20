@@ -67,4 +67,4 @@ def editreport(request, report_id):
         return HttpResponseRedirect('/reports/' + str(report_id))
     mainform = ReportForm(instance=report)
     formset = AttachmentFormSet(queryset=report.reportattachment_set.all())
-    return render(request, 'reports/editreport.html', {'mainform': mainform, 'formset': formset})
+    return render(request, 'reports/editreport.html', {'mainform': mainform, 'formset': formset, 'report': report})
