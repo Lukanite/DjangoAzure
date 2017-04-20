@@ -23,5 +23,12 @@
     <tr><th scope="row">Attached File: </th><td>No file attached.</td></tr>
     {% endif %}
 </table>
-<a class="btn btn-primary" href="edit" role="button">Edit</a>
+    <form action="" method="POST">
+        <a class="btn btn-primary" href="edit" role="button">Edit Report</a>
+        {% if user.profile.user_type == "site_manager" %}
+            <button class="btn btn-danger" name="delete" value="true">
+                Delete Report
+            </button>
+        {% endif %}
+    </form>
 {% endblock %}
