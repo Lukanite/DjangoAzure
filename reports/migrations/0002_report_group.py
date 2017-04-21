@@ -7,13 +7,14 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('reports', '0004_auto_20170410_1632'),
+        ('auth', '0006_require_contenttypes_0002'),
+        ('reports', '0001_initial'),
     ]
 
     operations = [
-        migrations.AlterField(
+        migrations.AddField(
             model_name='report',
-            name='attachment',
-            field=models.FileField(upload_to='reports/'),
+            name='group',
+            field=models.ForeignKey(null=True, blank=True, to='auth.Group'),
         ),
     ]

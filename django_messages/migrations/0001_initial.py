@@ -15,16 +15,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Message',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('subject', models.CharField(max_length=120, verbose_name='Subject')),
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
+                ('subject', models.CharField(verbose_name='Subject', max_length=140)),
                 ('body', models.TextField(verbose_name='Body')),
-                ('sent_at', models.DateTimeField(null=True, verbose_name='sent at', blank=True)),
-                ('read_at', models.DateTimeField(null=True, verbose_name='read at', blank=True)),
-                ('replied_at', models.DateTimeField(null=True, verbose_name='replied at', blank=True)),
-                ('sender_deleted_at', models.DateTimeField(null=True, verbose_name='Sender deleted at', blank=True)),
-                ('recipient_deleted_at', models.DateTimeField(null=True, verbose_name='Recipient deleted at', blank=True)),
-                ('parent_msg', models.ForeignKey(related_name='next_messages', verbose_name='Parent message', blank=True, to='django_messages.Message', null=True)),
-                ('recipient', models.ForeignKey(related_name='received_messages', verbose_name='Recipient', blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('sent_at', models.DateTimeField(blank=True, verbose_name='sent at', null=True)),
+                ('read_at', models.DateTimeField(blank=True, verbose_name='read at', null=True)),
+                ('replied_at', models.DateTimeField(blank=True, verbose_name='replied at', null=True)),
+                ('sender_deleted_at', models.DateTimeField(blank=True, verbose_name='Sender deleted at', null=True)),
+                ('recipient_deleted_at', models.DateTimeField(blank=True, verbose_name='Recipient deleted at', null=True)),
+                ('is_encrypted', models.BooleanField(verbose_name='Message is encrypted', default=False)),
+                ('parent_msg', models.ForeignKey(blank=True, verbose_name='Parent message', null=True, to='django_messages.Message', related_name='next_messages')),
+                ('recipient', models.ForeignKey(blank=True, verbose_name='Recipient', null=True, to=settings.AUTH_USER_MODEL, related_name='received_messages')),
                 ('sender', models.ForeignKey(related_name='sent_messages', verbose_name='Sender', to=settings.AUTH_USER_MODEL)),
             ],
             options={
@@ -32,6 +33,5 @@ class Migration(migrations.Migration):
                 'verbose_name': 'Message',
                 'verbose_name_plural': 'Messages',
             },
-            bases=(models.Model,),
         ),
     ]

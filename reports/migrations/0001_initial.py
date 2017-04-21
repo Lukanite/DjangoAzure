@@ -36,8 +36,17 @@ class Migration(migrations.Migration):
                 ('company_location', models.CharField(max_length=255)),
                 ('company_country', models.CharField(max_length=60)),
                 ('isprivate', models.BooleanField(default=True)),
-                ('release_date', models.DateField()),
+                ('release_date', models.DateField(auto_now_add=True)),
                 ('industry', models.ForeignKey(to='reports.Industry')),
+            ],
+        ),
+        migrations.CreateModel(
+            name='ReportAttachment',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
+                ('attachment', models.FileField(blank=True, upload_to='reports/')),
+                ('attachmenthash', models.CharField(blank=True, null=True, max_length=60)),
+                ('report', models.ForeignKey(to='reports.Report')),
             ],
         ),
         migrations.CreateModel(
