@@ -1,16 +1,32 @@
 {% extends "app/layout.html" %}
 {% load i18n %}
 
-{% block content %}
+{% load staticfiles %}
 
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/bootstrap.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'app/content/site.css' %}"/>
+    {% block styles %}{% endblock %}
+    <script src="{% static 'app/scripts/modernizr-2.6.2.js' %}"></script>
+
+{% block content %}
+<h2>Messages Home</h2>
 <h2>{{ title }}</h2>
 <h3>{{ message }}</h3>
-<ul class="subnavilist">
+<ul style="list-style-type:none">
     {% load inbox %}
-    <li><a href="{% url 'messages_inbox' %} ">&raquo;&nbsp;{% trans "Inbox" %} ({% inbox_count %})</a></li>
-    <li><a href="{% url 'messages_outbox' %} ">&raquo;&nbsp;{% trans "Sent Messages" %}</a></li>
-    <li><a href="{% url 'messages_compose' %} ">&raquo;&nbsp;{% trans "New Message" %}</a></li>
-    <li><a href="{% url 'messages_trash' %} ">&raquo;&nbsp;{% trans "Trash" %}</a></li>
+{% comment %}
+    <li><a href="{% url 'messages_inbox' %} " class="btn btn-primary">{% trans "Inbox" %} ({% inbox_count %})</a></li>
+    <br><li><a href="{% url 'messages_outbox' %} " class="btn btn-primary">{% trans "Sent Messages" %}</a></li>
+    <br><li><a href="{% url 'messages_compose' %} " class="btn btn-primary">{% trans "New Message" %}</a></li>
+    <br><li><a href="{% url 'messages_trash' %} " class="btn btn-primary">{% trans "Trash" %}</a></li>
 </ul>
+{% endcomment %}
+
+<a href="{% url 'messages_inbox' %} " class="btn btn-primary">{% trans "Inbox" %} ({% inbox_count %})</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="{% url 'messages_outbox' %} " class="btn btn-primary">{% trans "Sent Messages" %}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="{% url 'messages_compose' %} " class="btn btn-primary">{% trans "New Message" %}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="{% url 'messages_trash' %} " class="btn btn-primary">{% trans "Trash" %}</a>
+
+
 
 {% endblock %}}

@@ -1,12 +1,26 @@
 {% extends "django_messages/base.html" %}
 {% load i18n %}
+{% load inbox %}
+{% load staticfiles %}
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.13/datatables.min.css"/>
+{% endblock %}
 
 {% block content %}
 <h1>{% trans "Inbox" %}</h1>
+<h4>{% inbox_count %} New Messages</h4>
+
+<a href="{% url 'messages_inbox' %} " class="btn btn-primary"><strong>{% trans "Inbox" %} ({% inbox_count %})</strong></a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="{% url 'messages_outbox' %} " class="btn btn-primary">{% trans "Sent Messages" %}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="{% url 'messages_compose' %} " class="btn btn-primary">{% trans "New Message" %}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="{% url 'messages_trash' %} " class="btn btn-primary">{% trans "Trash" %}</a>
+
+<br><br>
+
 {% if message_list %}
-<table class="messages">
+<table class="table table-striped" id="inbox_list">
     <thead>
-        <tr><th>{% trans "Sender" %}&nbsp&nbsp</th><th>{% trans "Subject" %}&nbsp&nbsp&nbsp</th><th>{% trans "Received" %}&nbsp&nbsp&nbsp</th><th>{% trans "Action" %}</th></tr>
+        <tr><th>{% trans "Sender" %}</th><th>{% trans "Subject" %}</th><th>{% trans "Received" %}</th><th>{% trans "Encrypted" %}</th><th>{% trans "Action" %}</th></tr>
     </thead>
     <tbody>
 {% for message in message_list %}
@@ -19,6 +33,7 @@
             {% if message.replied %}</em>{% endif %}
             {% if message.new %}</strong>{% endif %}</td>
         <td>{{ message.sent_at|date:_("DATETIME_FORMAT") }}</td>
+        <td>{% if message.is_encrypted %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#10004;{% endif %}</td>
         <td><a href="{% url 'messages_delete' message.id %}">{% trans "delete" %}</a></td>
     </tr>
 {% endfor %}
@@ -27,4 +42,13 @@
 {% else %}
 <p>{% trans "No messages." %}</p>
 {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'app/scripts/jquery.dataTables.min.js' %}"></script>
+<script>
+$(document).ready(function(){
+    $('#inbox_list').dataTable();
+});
+</script>
 {% endblock %}

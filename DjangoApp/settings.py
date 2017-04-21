@@ -155,6 +155,7 @@ INSTALLED_APPS = (
     'app',
     'reports',
     'django_messages',
+    'tkinter',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
