@@ -37,7 +37,7 @@ def detail(request, report_id):
 @user_passes_test(not_investor_user, login_url='/', redirect_field_name="")
 def newreport(request):
     if request.method == 'POST':
-        filledform = ReportForm(request.POST, request.FILES)
+        filledform = ReportForm(request.POST, user=request.user)
         report = filledform.save()
         for file in request.FILES.getlist("attachment"):
             reportattachment = ReportAttachment()
@@ -46,7 +46,7 @@ def newreport(request):
             reportattachment.attachmenthash = get_hash(file)
             reportattachment.save()
         return HttpResponseRedirect('/reports/' + str(report.pk))
-    mainform = ReportForm()
+    mainform = ReportForm(user=request.user)
     fileform = ReportAttachmentForm()
     return render(request, 'reports/newreport.html', {'mainform': mainform, 'fileform': fileform})
 
@@ -65,6 +65,6 @@ def editreport(request, report_id):
             else:
                 reportattachment.delete()
         return HttpResponseRedirect('/reports/' + str(report_id))
-    mainform = ReportForm(instance=report)
+    mainform = ReportForm(user=request.user, instance=report)
     formset = AttachmentFormSet(queryset=report.reportattachment_set.all())
     return render(request, 'reports/editreport.html', {'mainform': mainform, 'formset': formset, 'report': report})
