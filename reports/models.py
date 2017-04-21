@@ -34,5 +34,11 @@ class Report(models.Model):
     industry = models.ForeignKey(Industry, on_delete=models.CASCADE)
     isprivate = models.BooleanField(default=True)
     release_date = models.DateField(auto_now_add=True)
+
+class ReportAttachment(models.Model):
+    """Attachment for a report"""
+    def __str__(self):
+        return self.attachment.name
+    report = models.ForeignKey(Report, on_delete=models.CASCADE)
     attachment = models.FileField(upload_to='reports/', blank=True)
     attachmenthash = models.CharField(max_length=60, blank=True, null=True)

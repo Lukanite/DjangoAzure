@@ -3,7 +3,8 @@
 {% block content %}
 <h1>New Report</h1>
 <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
-        {{ form.as_p }}
+        {{ mainform.as_p }}
+        <p><label for="id_attachment">Attachment(s):</label> <input id="id_attachment" name="attachment" type="file" multiple /></p>
         <button type="submit" class="save btn btn-default">Save</button>
 </form>
 {% endblock %}

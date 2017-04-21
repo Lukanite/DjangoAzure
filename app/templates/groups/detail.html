@@ -1,11 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    {{ title }}
-</head>
-<body>
+{% extends "app/layout.html" %}
+{% csrf_token %}
+{% block content %}
 
-</body>
-</html>
+    <h2>{{ title }}</h2>
+
+    <table class="table table-striped">
+        <tr>
+            <th>User Name</th>
+            <th>Full Name</th>
+            <th>Add</th>
+            {% if user.profile.user_type == 'site_manager'%}
+                <th>Remove</th>
+            {% endif %}
+        </tr>
+        {% for u in user_in_group %}
+            <tr>
+                <td>{{ u.username }}</td>
+                <td>{{ u.first_name }} {{ u.last_name }}</td>
+                <td>
+                    <form action="" method="POST">
+                        <button class="btn btn-success disabled" name="add" value="{{ u.username }}">
+                            Add
+                        </button>
+                    </form>
+                </td>
+                {% if user.profile.user_type == 'site_manager'%}
+                <td>
+                    <form action="" method="POST">
+                        <button class="btn btn-danger" name="remove" value="{{ u.username }}">
+                            Remove
+                        </button>
+                    </form>
+                </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        {% for u in user_not_in_group %}
+            <tr>
+                <td>{{ u.username }}</td>
+                <td>{{ u.first_name }} {{ u.last_name }}</td>
+                <td>
+                    <form action="" method="POST">
+                        <button class="btn btn-success" name="add" value="{{ u.username }}">
+                            Add
+                        </button>
+                    </form>
+                </td>
+                {% if user.profile.user_type == 'site_manager'%}
+                <td>
+                    <form action="" method="POST">
+                        <button class="btn btn-danger disabled" name="remove" value="{{ u.username }}">
+                            Remove
+                        </button>
+                    </form>
+                </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+
+{##}
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Title</title>#}
+{#    {{ title }}#}
+{#</head>#}
+{#<body>#}
+{##}
+{#</body>#}
+{#</html>#}
