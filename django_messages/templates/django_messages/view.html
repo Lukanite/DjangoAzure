@@ -1,8 +1,16 @@
 {% extends "django_messages/base.html" %}
 {% load i18n %}
-
+{% load inbox %}
 {% block content %}
 <h1>{% trans "View Message" %}</h1>
+
+<a href="{% url 'messages_inbox' %} " class="btn btn-primary">{% trans "Inbox" %} ({% inbox_count %})</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="{% url 'messages_outbox' %} " class="btn btn-primary">{% trans "Sent Messages" %}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="{% url 'messages_compose' %} " class="btn btn-primary">{% trans "New Message" %}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="{% url 'messages_trash' %} " class="btn btn-primary">{% trans "Trash" %}</a>
+
+<br><br>
+
 <dl class="message-headers">
     <dt>{% trans "Subject:" %}</dt>
     <dd><strong>{{ message.subject }}</strong></dd><br>
@@ -15,14 +23,17 @@
 </dl>
 {{ message.body|linebreaksbr }}<br /><br />
 
-{% ifequal message.recipient.pk user.pk %}
-<a href="{% url 'messages_reply' message.id %}">{% trans "Reply" %}</a>
-{% endifequal %}
-<a href="{% url 'messages_delete' message.id %}">{% trans "Delete" %}</a>
-
 {% if is_encrypted %}
-<a href="{% url 'messages_decrypt' message.id %}">{% trans "Decrypt" %}</a>
+<a href="{% url 'messages_decrypt' message.id %}" class="btn btn-default">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{% trans "Decrypt" %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+<br><br>
 {% endif %}
+
+
+{% ifequal message.recipient.pk user.pk %}
+<a href="{% url 'messages_reply' message.id %}" class="btn btn-primary">{% trans "Reply" %}</a>
+{% endifequal %}
+<a href="{% url 'messages_delete' message.id %}" class="btn btn-danger">{% trans "Delete" %}</a>
+
 
 {% comment %}Example reply_form integration
 {% if reply_form %}
