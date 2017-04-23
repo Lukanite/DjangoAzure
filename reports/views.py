@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
 from django.contrib.auth.decorators import user_passes_test
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import Group
 import hashlib
 
 def get_hash(file):
@@ -20,7 +21,19 @@ def not_investor_user(user):
 
 @login_required()
 def reportlist(request):
-    reports = Report.objects.all()
+    all_reports = Report.objects.all()
+    reports = []
+    if request.user.profile.user_type == "site_manager":
+        reports = all_reports
+    else:
+        user_groups = request.user.groups.filter()
+        for r in all_reports:
+            if r.isprivate:
+                for g in user_groups:
+                    if g.name == r.group.name:
+                        reports.append(r)
+            else:
+                reports.append(r)
     return render(request, 'reports/list.html', {'reports': reports})
 
 @login_required()
