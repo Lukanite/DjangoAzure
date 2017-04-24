@@ -1,20 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpRequest
-from django.template import RequestContext
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import get_object_or_404
-
-from django.template import loader
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-
-from django.http import HttpResponse, Http404
-
-from app.forms import UserForm
 from groups.forms import GroupForm
-
 from django.contrib.auth.models import Group, User
+
 
 @login_required()
 @csrf_exempt
@@ -27,7 +19,6 @@ def groups(request):
             groups.append(g)
         else:
             other_groups.append(g)
-
 
     if request.POST.get('leave'):
         leave_group = Group.objects.get(name=request.POST.get('leave'))
@@ -71,6 +62,7 @@ def create_group(request):
         }
     )
 
+
 @login_required()
 @csrf_exempt
 def group_users(request, name):
@@ -103,7 +95,7 @@ def group_users(request, name):
         context={
             'title': 'Manage Users in Group: ' + name,
             'year': datetime.now().year,
-            'users' : users,
+            'users': users,
             'user_in_group': user_in_group,
             'user_not_in_group': user_not_in_group
         }
