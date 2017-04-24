@@ -43,4 +43,5 @@ class ReportAttachment(models.Model):
         return self.attachment.name
     report = models.ForeignKey(Report, on_delete=models.CASCADE)
     attachment = models.FileField(upload_to='reports/', blank=True)
+    isencrypted = models.BooleanField(default=False)
     attachmenthash = models.CharField(max_length=60, blank=True, null=True)
