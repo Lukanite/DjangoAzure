@@ -26,4 +26,4 @@ class ReportAttachmentForm(ModelForm):
         labels = {
             'attachment': ('Attachment(s)'),
         }
-        exclude = ['report', 'attachmenthash', 'encryptedattachment']
+        exclude = ['report', 'attachmenthash']

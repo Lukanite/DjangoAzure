@@ -97,7 +97,7 @@ def newreport(request):
 
 @login_required()
 def editreport(request, report_id):
-    AttachmentFormSet = modelformset_factory(ReportAttachment, exclude=('report','attachmenthash','encryptedattachment'), extra=1)
+    AttachmentFormSet = modelformset_factory(ReportAttachment, exclude=('report','attachmenthash'), extra=1)
     report = get_object_or_404(Report, pk=report_id)
     if request.method == 'POST':
         formset = AttachmentFormSet(request.POST, request.FILES, queryset=report.reportattachment_set.all())
