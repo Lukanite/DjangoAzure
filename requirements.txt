@@ -4,3 +4,4 @@ whitenoise
 django_messages
 pycrypto
 dj-database-url
+psycopg2
