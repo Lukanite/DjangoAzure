@@ -7,13 +7,12 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('reports', '0004_auto_20170410_1632'),
+        ('reports', '0004_reportattachment_encryptedattachment'),
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='report',
-            name='attachment',
-            field=models.FileField(upload_to='reports/'),
+        migrations.RemoveField(
+            model_name='reportattachment',
+            name='encryptedattachment',
         ),
     ]

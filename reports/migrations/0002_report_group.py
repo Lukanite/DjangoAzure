@@ -7,13 +7,14 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('django_messages', '0002_auto_20160607_0852'),
+        ('auth', '0006_require_contenttypes_0002'),
+        ('reports', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='message',
-            name='is_encrypted',
-            field=models.BooleanField(verbose_name='Message is encrypted', default=False),
+            model_name='report',
+            name='group',
+            field=models.ForeignKey(null=True, blank=True, to='auth.Group'),
         ),
     ]
