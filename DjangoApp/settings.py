@@ -3,6 +3,7 @@ Django settings for DjangoApp project.
 """
 import os
 from os import path
+import dj_database_url
 PROJECT_ROOT = path.dirname(path.abspath(path.dirname(__file__)))
 
 DEBUG = True
@@ -19,16 +20,35 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': path.join(PROJECT_ROOT, 'db.sqlite3'),
+#         'USER': '',
+#         'PASSWORD': '',
+#         'HOST': '',
+#         'PORT': '',
+#     }
+# }
+# DATABASES = {
+#     'default': {
+#     }
+# }
+# db_from_env = dj_database_url.config(conn_max_age=500)
+# DATABASES['default'].update(db_from_env)
+# DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': path.join(PROJECT_ROOT, 'db.sqlite3'),
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'dbqfq1r2oh3rqt',
+        'USER': 'jjxeooatlaeltg',
+        'PASSWORD': '9798b1db4634c90f0433c2abe9272c8e3390463e780b8584aa96106626c2b744',
+        'HOST': 'ec2-54-163-234-140.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
+
 
 APP_DIRS = 'true'
 
