@@ -4,6 +4,7 @@ import codecs
 from lxml import html
 import psycopg2
 import sys
+import os
 
 #INFO TO CONNECT TO THE DATABASE
 conn_string = "host='ec2-54-163-234-140.compute-1.amazonaws.com' dbname='dbqfq1r2oh3rqt' user='jjxeooatlaeltg' password='9798b1db4634c90f0433c2abe9272c8e3390463e780b8584aa96106626c2b744'"
@@ -16,7 +17,8 @@ def main():
     user_data = login()
     user_type = get_user_type(user_data)
     groups = get_group_data(user_data)
-    initial_prompt(user_data, groups)
+    reports = get_reports(user_data, user_type, groups)
+    initial_prompt(user_data, groups, reports)
 
 
 def login():
@@ -48,7 +50,7 @@ def login():
     #print(r.cookies)
 
     while r.url != 'http://cs3240.herokuapp.com/reports/':
-        print("Invalid username or password. Please try again.\n")
+        print("\nInvalid username or password. Please try again.\n")
         username = input("Username: ")
         password = input("Password: ")
         data = {'username': username, 'password': password, 'csrfmiddlewaretoken': csrftoken}
@@ -75,37 +77,135 @@ def get_group_data(user_data):
     return groups
 
 def get_user_type(user_data):
-    database.execute("SELECT * FROM app_profile")
-    app_profile_data = database.fetchall()
-    print (app_profile_data)
+    database.execute("SELECT user_type FROM app_profile WHERE id=" + str(user_data[0]))
+    user_type = database.fetchall()
+    return user_type[0][0]
 
-def initial_prompt(user_data, groups):
+def get_reports(user_data, user_type, groups):
+    reports = []
+    #[('id',), ('name',), ('company_name',), ('company_ceo',), ('company_phone',), ('company_email',), ('company_location',), ('company_country',), ('isprivate',), ('release_date',), ('industry_id',), ('sector_id',), ('group_id',)]
+    database.execute("SELECT * FROM reports_report")
+    reports_data = database.fetchall()
+    for r in reports_data:
+        if user_type == 'site_manager':
+            reports.append(r)
+        elif r[8] == 0:
+            #Is not private
+            reports.append(r)
+        else:
+            for group in groups:
+                #Group Id matches
+                if r[12] == group[0]:
+                    reports.append(r)
+    return reports
+
+def initial_prompt(user_data, groups, reports):
     while True:
         print("Please enter L see list of Reports")
         print("Please enter a Report ID to select a Report")
         print("Please enter Q to quit")
         choice = input("Choice: ")
-        if not(choice == 'Q' or choice == 'L'):
-            print("Invalid Choice")
-
-    #[('id',), ('name',), ('company_name',), ('company_ceo',), ('company_phone',), ('company_email',), ('company_location',), ('company_country',), ('isprivate',), ('release_date',), ('industry_id',), ('sector_id',), ('group_id',)]
-        reports = []
-        if choice == 'L':
-            database.execute("SELECT * FROM reports_report")
-            reports_data = database.fetchall()
-            for r in reports_data:
-                for group in groups:
-                    if r[9] == 0:
-                        reports.append((r[0], r[1]))
-                    elif r[12] == group[0]:
-                        reports.append((r[0],r[1]))
-            print("\n\nHere is a list of Reports by Report ID and Report Name")
+        if not(choice == 'Q' or choice == 'L' or choice.isdigit()):
+            print("\nInvalid Choice\n")
+        elif choice == 'L':
+            print("\nHere is a list of Reports by Report ID and Report Name")
             for report in reports:
                 print ("ID: " + str(report[0]) + " Name: " + report[1])
-            print("\n")
+            print("")
 
-        if choice == 'Q':
+        elif choice == 'Q':
+            print("\nGoodbye")
             quit()
+
+        else:
+            choice = int(choice)
+            valid_selection = False
+            for report in reports:
+                if choice == int(report[0]):
+                    valid_selection = True
+                    select_report(user_data, groups, report, reports)
+                    quit()
+            if not valid_selection:
+                print("\nInvalid Choice\n")
+
+
+def select_report(user_data, groups, report, reports):
+    print ("\nYou have selected the report ID: " + str(report[0]) + " Name: " + report[1] + '\n')
+    #[('id',), ('name',), ('company_name',), ('company_ceo',), ('company_phone',), ('company_email',), ('company_location',), ('company_country',), ('isprivate',), ('release_date',), ('industry_id',), ('sector_id',), ('group_id',)]
+
+    industry = get_industy(report)
+    sector = get_sector(report)
+    attachments = get_attachments(report)
+    group_name = ""
+    for g in groups:
+        if g[0] == report[12]:
+            group_name = g[1]
+
+    while True:
+        print("Please enter V to view the Report")
+        print("Please enter D to download the attachments of Report")
+        print("Please enter B to go back")
+        print("Please enter Q to quit")
+        choice = input("Choice: ")
+        if choice == 'V':
+            print("\nReport View\n")
+            print("ID: " + str(report[0]))
+            print("Name: " + report[1])
+            print("Company Name: " + report[2])
+            print("Company CEO: " + report[3])
+            print("Company Phone: " + report[4])
+            print("Company Email: " + report[5])
+            print("Company Location: " + report[6])
+            print("Company Country: " + report[7])
+            print("Sector: " + sector)
+            print("Industry: "  + industry)
+            print("Group: " + group_name)
+            if report[8]:
+                print("Private : Yes")
+            else:
+                print("Private : No")
+            print("Release Date: " + str(report[9]))
+            i = 0
+            while i < len(attachments):
+                print ("Attachment " + str(i) + " "+ attachments[i][1][8:])
+                i+=1
+            print("")
+
+
+
+
+        elif choice == 'D':
+            directory_name = "report_" + str(report[0]) + "_" + report[1] + "_attachments"
+            os.makedirs(directory_name)
+
+        elif choice == 'B':
+            print ("Going back\n")
+            initial_prompt(user_data, groups, reports)
+
+        elif choice == 'Q':
+            print("\nGoodbye")
+            quit()
+        else:
+            print("\nInvalid Choice\n")
+
+
+def get_industy(report):
+    database.execute("SELECT name FROM reports_industry WHERE id=" + str(report[10]))
+    industry = database.fetchall()[0][0]
+    return industry
+
+def get_sector(report):
+    database.execute("SELECT name FROM reports_sector WHERE id=" + str(report[11]))
+    sector = database.fetchall()[0][0]
+    return sector
+
+def get_attachments(report):
+    #[('id',), ('attachment',), ('attachmenthash',), ('report_id',), ('isencrypted',)]
+    # database.execute("SELECT column_name FROM information_schema.columns WHERE TABLE_NAME='reports_reportattachment'")
+    # print (database.fetchall())
+    database.execute("SELECT * FROM reports_reportattachment WHERE report_id=" + str(report[0]))
+    attachment_data = database.fetchall()
+    return attachment_data
 
 
 
