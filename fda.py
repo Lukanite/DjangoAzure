@@ -5,6 +5,13 @@ from lxml import html
 import psycopg2
 import sys
 import os
+import urllib
+import hashlib, random, struct
+from django.core.files import File
+from Crypto.Cipher import AES
+from tempfile import TemporaryFile
+import hashlib, random, struct
+
 
 #INFO TO CONNECT TO THE DATABASE
 conn_string = "host='ec2-54-163-234-140.compute-1.amazonaws.com' dbname='dbqfq1r2oh3rqt' user='jjxeooatlaeltg' password='9798b1db4634c90f0433c2abe9272c8e3390463e780b8584aa96106626c2b744'"
@@ -104,8 +111,9 @@ def initial_prompt(user_data, groups, reports):
         print("Please enter L see list of Reports")
         print("Please enter a Report ID to select a Report")
         print("Please enter Q to quit")
+        print("Please enter E to encrypt a File")
         choice = input("Choice: ")
-        if not(choice == 'Q' or choice == 'L' or choice.isdigit()):
+        if not(choice == 'Q' or choice == 'L' or choice == 'E' or choice.isdigit()):
             print("\nInvalid Choice\n")
         elif choice == 'L':
             print("\nHere is a list of Reports by Report ID and Report Name")
@@ -116,6 +124,19 @@ def initial_prompt(user_data, groups, reports):
         elif choice == 'Q':
             print("\nGoodbye")
             quit()
+
+        elif choice == 'E':
+            loop = True
+            while (loop):
+                print("\nPlease enter the name of the File you would like encrypt:")
+                file_name = input("File Name: ")
+                if os.path.isfile(file_name):
+                    infile = open(file_name, 'rb')
+                    outfile = open(file_name + ".enc", 'wb')
+                    encrypt_file(infile, outfile)
+                    loop = False
+                else:
+                    print ("Invalid File Name\n")
 
         else:
             choice = int(choice)
@@ -171,15 +192,38 @@ def select_report(user_data, groups, report, reports):
                 i+=1
             print("")
 
-
-
-
         elif choice == 'D':
             directory_name = "report_" + str(report[0]) + "_" + report[1] + "_attachments"
+            i = 1
+            while os.path.exists(directory_name):
+                directory_name = "report_" + str(report[0]) + "_" + report[1] + "_attachments(" + str(i) + ")"
+                i += 1
             os.makedirs(directory_name)
+            print("")
+            for attachment in attachments:
+                print("Downloading " + attachment[1][8:])
+                url = "http://cs3240.herokuapp.com/media/" + attachment[1]
+                file_path= directory_name + "/" + attachment[1][8:]
+                urllib.request.urlretrieve(url, file_path)
+                if attachment[4]:
+                    loop = True
+                    while loop:
+                        print("This file is encrypted. Would you like to decrypt it [Y/N]")
+                        choice = input("Choice: ")
+                        if choice == "Y":
+                            print (file_path[:-4])
+                            infile = open(file_path,'rb')
+                            outfile = open(file_path[:-4], 'wb')
+                            decrypt_file(infile, outfile)
+                            os.remove(file_path)
+                            loop = False
+                        elif choice == "N":
+                            loop = False
+            print("")
+
 
         elif choice == 'B':
-            print ("Going back\n")
+            print ("\nGoing back\n")
             initial_prompt(user_data, groups, reports)
 
         elif choice == 'Q':
@@ -207,8 +251,36 @@ def get_attachments(report):
     attachment_data = database.fetchall()
     return attachment_data
 
+def encrypt_file(infile, outfile, chunksize=64*1024):
+    key = "0123456789123456"
+    iv = ''.join(chr(random.randint(0, 0xFF)) for i in range(16))
+    encryptor = AES.new(key, AES.MODE_CBC, iv)
+    filesize = infile.size
+    outfile.write(struct.pack('<Q', filesize))
+    outfile.write(iv)
 
+    while True:
+        chunk = infile.read(chunksize)
+        if len(chunk) == 0:
+            break
+        elif len(chunk) % 16 != 0:
+            chunk += ' ' * (16 - len(chunk) % 16)
 
+        outfile.write(encryptor.encrypt(chunk))
+    return outfile
+
+def decrypt_file(infile, outfile, chunksize=64*1024):
+    key = "0123456789123456"
+    origsize = struct.unpack('<Q', infile.read(struct.calcsize('Q')))[0]
+    iv = infile.read(16)
+    decryptor = AES.new(key, AES.MODE_CBC, iv)
+    while True:
+        chunk = infile.read(chunksize)
+        if len(chunk) == 0:
+            break
+        outfile.write(decryptor.decrypt(chunk))
+    outfile.truncate(origsize)
+    return outfile
 
 
 
