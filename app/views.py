@@ -59,7 +59,7 @@ def about(request):
         'app/about.html',
         context={
             'title': 'About',
-            'message': 'Your application description page.',
+            'message': 'Lokahi lets you succeed',
             'year': datetime.now().year,
         }
     )
@@ -190,7 +190,7 @@ def trash(request):
         request,
         'app/trash.html',
         context={
-            'title': 'your trash',
+            'title': 'Your trash',
             'message': 'trash',
             'year': datetime.now().year,
         }
@@ -199,7 +199,7 @@ def trash(request):
 
 @login_required()
 def view(request):
-    """Renders the trash page."""
+    """Renders the view page."""
     assert isinstance(request, HttpRequest)
     return render(
         request,
