@@ -15,6 +15,7 @@
     <tr><th scope="row">Group</th><td>{{ report.group }}</td></tr>
     <tr><th scope="row">Private</th><td>{{ report.isprivate }}</td></tr>
     <tr><th scope="row">Release Date</th><td>{{ report.release_date }}</td></tr>
+    <tr><th scope="row">Created By</th><td>{{ report.user }}</td></tr>
     {% if report.reportattachment_set %}
     {% for item in report.reportattachment_set.all %}
     <tr><th scope="row">Attached File: </th><td><a href="{{ item.attachment.url }}">{{ item.attachment.name }}</a></td></tr>

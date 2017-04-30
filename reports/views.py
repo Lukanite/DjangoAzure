@@ -83,7 +83,9 @@ def detail(request, report_id):
 def newreport(request):
     if request.method == 'POST':
         filledform = ReportForm(request.POST, user=request.user)
-        report = filledform.save()
+        report = filledform.save(commit=False)
+        report.user = request.user
+        report.save()
         for file in request.FILES.getlist("attachment"):
             reportattachment = ReportAttachment()
             reportattachment.attachment = file
