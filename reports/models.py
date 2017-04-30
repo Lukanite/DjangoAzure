@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 
 # Create your models here.
 class Sector(models.Model):
@@ -35,6 +35,7 @@ class Report(models.Model):
     industry = models.ForeignKey(Industry, on_delete=models.CASCADE)
     isprivate = models.BooleanField(default=True)
     group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True, default=None, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None, blank=True)
     release_date = models.DateField(auto_now_add=True)
 
 class ReportAttachment(models.Model):

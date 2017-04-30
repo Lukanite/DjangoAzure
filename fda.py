@@ -117,8 +117,9 @@ def initial_prompt(user_data, groups, reports):
             print("\nInvalid Choice\n")
         elif choice == 'L':
             print("\nHere is a list of Reports by Report ID and Report Name")
+            print("ID\tName")
             for report in reports:
-                print ("ID: " + str(report[0]) + " Name: " + report[1])
+                print (str(report[0]) + "\t" + report[1])
             print("")
 
         elif choice == 'Q':
