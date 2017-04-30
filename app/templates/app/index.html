@@ -5,8 +5,16 @@
 <div class="jumbotron">
     <img src="http://media.corporate-ir.net/media_files/IROL/79/79678/2015/images/ir-events.jpg", class="img-rounded", width="500px">
     <h1>Welcome to Lokahi</h1>
+    {% if user.is_authenticated %}
+     <p class="lead">Welcome to the construction site of the new Lokahi website, brought to you by <em><a href = "{% url 'about' %}">Group 19</a></em>. Choose form the tabs above to get started.</p>
+    <p><a href="{% url 'about' %}" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+
+    {% else %}
+
     <p class="lead">Welcome to the construction site of the new Lokahi website, brought to you by <em><a href = "{% url 'about' %}">Group 19</a></em>. Take a look around, or even try signing up for a new user in the top-right!</p>
     <p><a href="{% url 'about' %}" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+
+    {% endif %}
 </div>
 
 {% endblock %}
