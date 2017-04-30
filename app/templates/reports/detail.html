@@ -20,9 +20,9 @@
     {% if report.reportattachment_set %}
     {% for item in report.reportattachment_set.all %}
     {% if item.isencrypted %}
-    <tr><th scope="row">Attached File: </th><td><a href="{{ item.attachment.url }}">{{ item.attachment.name }}</a></td></tr>
-    {% else %}
     <tr><th scope="row">Attached File (encrypted): </th><td>{{ item.attachment.name }}</td></tr>
+    {% else %}
+    <tr><th scope="row">Attached File: </th><td><a href="{{ item.attachment.url }}">{{ item.attachment.name }}</a></td></tr>
     {% endif %}
     <tr><th scope="row">File Hash (md5):</th><td>{{ item.attachmenthash }}</td></tr>
     {% endfor %}
