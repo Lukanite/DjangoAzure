@@ -45,7 +45,7 @@ def contact(request):
         'app/contact.html',
         context={
             'title': 'Contact',
-            'message': 'Your contact page.',
+            'message': 'Group 19 Contact Information',
             'year': datetime.now().year,
         }
     )
