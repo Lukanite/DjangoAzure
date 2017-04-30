@@ -102,6 +102,9 @@ def editreport(request, report_id):
     AttachmentFormSet = modelformset_factory(ReportAttachment, exclude=('report','attachmenthash'), extra=1)
     report = get_object_or_404(Report, pk=report_id)
     if request.method == 'POST':
+        filledform = ReportForm(request.POST, user=request.user, instance=report)
+        report = filledform.save(commit=False)
+        report.save()
         formset = AttachmentFormSet(request.POST, request.FILES, queryset=report.reportattachment_set.all())
         instances = formset.save(commit=False)
         for reportattachment in instances:
