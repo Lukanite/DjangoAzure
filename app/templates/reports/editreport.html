@@ -1,109 +1,55 @@
 {% extends "app/layout.html" %}
 
 {% block content %}
-    <h1>Edit Report</h1>
-    {% if user.profile.user_type == "investor_user" %}
-        <table class="table">
-            <tr>
-                <th scope="row">Report Name</th>
-                <td>{{ report.name }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Company Name</th>
-                <td>{{ report.company_name }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Company CEO</th>
-                <td>{{ report.company_ceo }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Company Phone</th>
-                <td>{{ report.company_phone }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Company Email</th>
-                <td>{{ report.company_email }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Company Location</th>
-                <td>{{ report.company_location }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Company Country</th>
-                <td>{{ report.company_country }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Sector</th>
-                <td>{{ report.sector }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Industry</th>
-                <td>{{ report.industry }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Private</th>
-                <td>{{ report.isprivate }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Release Date</th>
-                <td>{{ report.release_date }}</td>
-            </tr>
-        </table>
-        <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
-            {% for field in formset %}
-                {% if field == "Isencrypted" %}
-                    <div class="control-group">
-                        <label class="control-label">{{ "Is the File Encrypted?" }}</label>
-                        <div class="controls">{{ field }}
-                            {% if field.help_text %}
-                                <p class="help-inline">
-                                    <small>{{ field.help_text }}</small>
-                                </p>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="control-group">
-                        <label class="control-label">{{ field.label }}</label>
-                        <div class="controls">{{ field }}
-                            {% if field.help_text %}
-                                <p class="help-inline">
-                                    <small>{{ field.help_text }}</small>
-                                </p>
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endif %}
-            {% endfor %}
-            <button type="submit" class="save btn btn-default">Save</button>
-        </form>
-    {% else %}
-         <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
-        {% for field in mainform %}
-            {% if field.label == "Isprivate" %}
-                <div class="control-group">
-                    <label class="control-label">{{ "Is the report private?" }}</label>
-                    <div class="controls">{{ field }}
-                        {% if field.help_text %}
-                            <p class="help-inline">
-                                <small>{{ field.help_text }}</small>
-                            </p>
-                        {% endif %}
-                    </div>
-                </div>
-            {% else %}
-                <div class="control-group">
-                    <label class="control-label">{{ field.label }}</label>
-                    <div class="controls">{{ field }}
-                        {% if field.help_text %}
-                            <p class="help-inline">
-                                <small>{{ field.help_text }}</small>
-                            </p>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endif %}
-        {% endfor %}
+<h1>Edit Report</h1>
+{% if user.profile.user_type == "investor_user" %}
+    <table class="table">
+        <tr>
+            <th scope="row">Report Name</th>
+            <td>{{ report.name }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Company Name</th>
+            <td>{{ report.company_name }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Company CEO</th>
+            <td>{{ report.company_ceo }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Company Phone</th>
+            <td>{{ report.company_phone }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Company Email</th>
+            <td>{{ report.company_email }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Company Location</th>
+            <td>{{ report.company_location }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Company Country</th>
+            <td>{{ report.company_country }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Sector</th>
+            <td>{{ report.sector }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Industry</th>
+            <td>{{ report.industry }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Private</th>
+            <td>{{ report.isprivate }}</td>
+        </tr>
+        <tr>
+            <th scope="row">Release Date</th>
+            <td>{{ report.release_date }}</td>
+        </tr>
+    </table>
+    <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
         {% for field in formset %}
             {% if field == "Isencrypted" %}
                 <div class="control-group">
@@ -129,14 +75,55 @@
                 </div>
             {% endif %}
         {% endfor %}
-         <button type="submit" class="save btn btn-default">Save</button>
-         </form>
+        <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+{% else %}
+    <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
+    {% for field in mainform %}
+        {% if field.label == "Isprivate" %}
+            <div class="control-group">
+                <label class="control-label">{{ "Is the report private?" }}</label>
+                <div class="controls">{{ field }}
+                    {% if field.help_text %}
+                        <p class="help-inline">
+                            <small>{{ field.help_text }}</small>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <div class="control-group">
+                <label class="control-label">{{ field.label }}</label>
+                <div class="controls">{{ field }}
+                    {% if field.help_text %}
+                        <p class="help-inline">
+                            <small>{{ field.help_text }}</small>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+    {% for field in formset %}
+    <div class="control-group">
+        <label class="control-label">{{ field.label }}</label>
+        <div class="controls">{{ field }}
+            {% if field.help_text %}
+                <p class="help-inline">
+                    <small>{{ field.help_text }}</small>
+                </p>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
+<button type="submit" class="save btn btn-default">Save</button>
+</form>
 
 
-        {#        <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}#}
-        {#            {{ mainform.as_p }}#}
-        {#            {{ formset }}#}
-        {#            <button type="submit" class="save btn btn-default">Save</button>#}
-        {#        </form>#}
-    {% endif %}
+{#        <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}#}
+{#            {{ mainform.as_p }}#}
+{#            {{ formset }}#}
+{#            <button type="submit" class="save btn btn-default">Save</button>#}
+{#        </form>#}
+{% endif %}
 {% endblock %}
