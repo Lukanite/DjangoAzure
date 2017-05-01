@@ -13,12 +13,17 @@
     <tr><th scope="row">Sector</th><td>{{ report.sector }}</td></tr>
     <tr><th scope="row">Industry</th><td>{{ report.industry }}</td></tr>
     <tr><th scope="row">Group</th><td>{{ report.group }}</td></tr>
+    <tr><th scope="row">Current Projects</th><td>{{ report.projects }}</td></tr>
     <tr><th scope="row">Private</th><td>{{ report.isprivate }}</td></tr>
     <tr><th scope="row">Release Date</th><td>{{ report.release_date }}</td></tr>
     <tr><th scope="row">Created By</th><td>{{ report.user }}</td></tr>
     {% if report.reportattachment_set %}
     {% for item in report.reportattachment_set.all %}
+    {% if item.isencrypted %}
+    <tr><th scope="row">Attached File (encrypted): </th><td>{{ item.attachment.name }}</td></tr>
+    {% else %}
     <tr><th scope="row">Attached File: </th><td><a href="{{ item.attachment.url }}">{{ item.attachment.name }}</a></td></tr>
+    {% endif %}
     <tr><th scope="row">File Hash (md5):</th><td>{{ item.attachmenthash }}</td></tr>
     {% endfor %}
     {% else %}
