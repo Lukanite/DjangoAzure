@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from app.forms import UserForm, ProfileForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+import smtplib
 #from .models import Message
 #from django_messages import views
 # from django_messages.models import Message
@@ -65,6 +66,19 @@ def about(request):
     )
 
 
+# @csrf_exempt
+# def login(request):
+#     assert isinstance(request, HttpRequest)
+#     captcha = CaptchaField()
+#     return render(
+#         request,
+#         'app/login.html',
+#         context={ 'title':'Log in',
+#                 'year':datetime.now().year,
+#                 'captcha':captcha
+#         }
+#     )
+
 @csrf_exempt
 def signup(request):
     """Renders the signup page."""
@@ -80,6 +94,7 @@ def signup(request):
             password = request.POST.get('user-password')
             new_user = authenticate(username=username, password=password)
             login(request, new_user)
+            send_signup_email(request.POST.get("user-first_name"), request.POST.get("user-last_name"), request.POST.get("user-email"))
             return HttpResponseRedirect('/')
     else:
         user_form = UserForm(prefix="user")
@@ -211,4 +226,22 @@ def view(request):
         }
     )
 
+def send_signup_email(firstname, lastname, recipient):
 
+
+    gmail_user = "lokahiteam19"
+    gmail_pwd = "cs3240lokahi"
+    FROM = "Lokahi Fintech"
+    TO = recipient if type(recipient) is list else [recipient]
+    SUBJECT = "Thank you for Signing Up!"
+    TEXT = "Thank you " + firstname + " " + lastname + " for signing up to use Lokahi Fintech!"
+
+    # Prepare actual message
+    message = """From: %s\nTo: %s\nSubject: %s\n\n%s
+    """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.ehlo()
+    server.starttls()
+    server.login(gmail_user, gmail_pwd)
+    server.sendmail(FROM, TO, message)
+    server.close()
