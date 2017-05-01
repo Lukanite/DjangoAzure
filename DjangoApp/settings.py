@@ -20,24 +20,6 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': path.join(PROJECT_ROOT, 'db.sqlite3'),
-#         'USER': '',
-#         'PASSWORD': '',
-#         'HOST': '',
-#         'PORT': '',
-#     }
-# }
-# DATABASES = {
-#     'default': {
-#     }
-# }
-# db_from_env = dj_database_url.config(conn_max_age=500)
-# DATABASES['default'].update(db_from_env)
-# DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',

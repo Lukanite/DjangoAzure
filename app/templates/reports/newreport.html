@@ -1,10 +1,66 @@
 {% extends "app/layout.html" %}
 
 {% block content %}
-<h1>New Report</h1>
-<form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
-        {{ mainform.as_p }}
-        <p><label for="id_attachment">Attachment(s):</label> <input id="id_attachment" name="attachment" type="file" multiple /></p>
+    <h1>New Report</h1>
+    <form method="post" action="">
+        {% for field in mainform %}
+            {% if field.errors %}
+                <div class="control-group error">
+                    <label class="control-label">{{ field.label }}</label>
+                    <div class="controls">{{ field }}
+                        <span class="help-inline">
+                            {% for error in  field.errors %}{{ error }}{% endfor %}
+                        </span>
+                    </div>
+                </div>
+            {% else %}
+                {% if field.label == "Isprivate" %}
+                    <div class="control-group">
+                        <label class="control-label">{{ "Is the report private?" }}</label>
+                        <div class="controls">{{ field }}
+                            {% if field.help_text %}
+                                <p class="help-inline">
+                                    <small>{{ field.help_text }}</small>
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="control-group">
+                        <label class="control-label">{{ field.label }}</label>
+                        <div class="controls">{{ field }}
+                            {% if field.help_text %}
+                                <p class="help-inline">
+                                    <small>{{ field.help_text }}</small>
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+        <p><label for="id_attachment">Attachment(s):</label> <input id="id_attachment" name="attachment" type="file"
+                                                                    multiple/></p>
+        <b>Is the File Encrypted?</b>
+        <div class="checkbox">
+            <label><input type="checkbox" value="" name="encrypted"></label>
+        </div>
         <button type="submit" class="save btn btn-default">Save</button>
-</form>
+    </form>
 {% endblock %}
+
+
+{#{% extends "app/layout.html" %}#}
+{##}
+{#{% block content %}#}
+{#<h1>New Report</h1>#}
+{#<form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}#}
+{#        {{ mainform.as_p }}#}
+{#        <p><label for="id_attachment">Attachment(s):</label> <input id="id_attachment" name="attachment" type="file" multiple /></p>#}
+{#        <div class="checkbox">#}
+{#            <label><b>Is the File Encrypted?<input type="checkbox" value="" name="encrypted"></b></label>#}
+{#        </div>#}
+{#        <button type="submit" class="save btn btn-default">Save</button>#}
+{#</form>#}
+{#{% endblock %}#}
+
