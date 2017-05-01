@@ -6,4 +6,3 @@ pycrypto
 dj-database-url
 psycopg2
 captcha
-smtplib
