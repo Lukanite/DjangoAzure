@@ -11,16 +11,16 @@ from django.core.files import File
 from Crypto.Cipher import AES
 from tempfile import TemporaryFile
 import hashlib, random, struct
+from Crypto.Cipher import ARC4
 
-
-#INFO TO CONNECT TO THE DATABASE
+# INFO TO CONNECT TO THE DATABASE
 conn_string = "host='ec2-54-163-234-140.compute-1.amazonaws.com' dbname='dbqfq1r2oh3rqt' user='jjxeooatlaeltg' password='9798b1db4634c90f0433c2abe9272c8e3390463e780b8584aa96106626c2b744'"
 conn = psycopg2.connect(conn_string)
 database = conn.cursor()
 
 
 def main():
-    #[('id',), ('password',), ('last_login',), ('is_superuser',), ('username',), ('first_name',), ('last_name',), ('email',), ('is_staff',), ('is_active',), ('date_joined',)]
+    # [('id',), ('password',), ('last_login',), ('is_superuser',), ('username',), ('first_name',), ('last_name',), ('email',), ('is_staff',), ('is_active',), ('date_joined',)]
     user_data = login()
     user_type = get_user_type(user_data)
     groups = get_group_data(user_data)
@@ -30,8 +30,8 @@ def main():
 
 def login():
     print("Welcome to the Lokahi Crowdfunding file download application! "
-       "Here you can view available reports and download their attached file(s). "
-      "Begin by logging in with your username and password.\n")
+          "Here you can view available reports and download their attached file(s). "
+          "Begin by logging in with your username and password.\n")
 
     login1 = 'http://cs3240.herokuapp.com/login/'
     login2 = 'http://cs3240.herokuapp.com/login/?next=/reports/'
@@ -52,9 +52,9 @@ def login():
 
     r = client.post(login2, data=data)
     r.encoding = 'cp1252'
-    #print(r.url)
-    #print(r.text)
-    #print(r.cookies)
+    # print(r.url)
+    # print(r.text)
+    # print(r.cookies)
 
     while r.url != 'http://cs3240.herokuapp.com/reports/':
         print("\nInvalid username or password. Please try again.\n")
@@ -68,6 +68,7 @@ def login():
     database.execute("SELECT * FROM auth_user WHERE username='" + username + "'")
     user_data = database.fetchall()[0]
     return user_data
+
 
 def get_group_data(user_data):
     groups = []
@@ -83,28 +84,31 @@ def get_group_data(user_data):
                     groups.append((g[0], g[1]))
     return groups
 
+
 def get_user_type(user_data):
     database.execute("SELECT user_type FROM app_profile WHERE id=" + str(user_data[0]))
     user_type = database.fetchall()
     return user_type[0][0]
 
+
 def get_reports(user_data, user_type, groups):
     reports = []
-    #[('id',), ('name',), ('company_name',), ('company_ceo',), ('company_phone',), ('company_email',), ('company_location',), ('company_country',), ('isprivate',), ('release_date',), ('industry_id',), ('sector_id',), ('group_id',)]
+    # [('id',), ('name',), ('company_name',), ('company_ceo',), ('company_phone',), ('company_email',), ('company_location',), ('company_country',), ('isprivate',), ('release_date',), ('industry_id',), ('sector_id',), ('group_id',)]
     database.execute("SELECT * FROM reports_report")
     reports_data = database.fetchall()
     for r in reports_data:
         if user_type == 'site_manager':
             reports.append(r)
         elif r[8] == 0:
-            #Is not private
+            # Is not private
             reports.append(r)
         else:
             for group in groups:
-                #Group Id matches
+                # Group Id matches
                 if r[12] == group[0]:
                     reports.append(r)
     return reports
+
 
 def initial_prompt(user_data, groups, reports):
     while True:
@@ -113,7 +117,7 @@ def initial_prompt(user_data, groups, reports):
         print("Please enter Q to quit")
         print("Please enter E to encrypt a File")
         choice = input("Choice: ")
-        if not(choice == 'Q' or choice == 'L' or choice == 'E' or choice.isdigit()):
+        if not (choice == 'Q' or choice == 'L' or choice == 'E' or choice.isdigit()):
             print("\nInvalid Choice\n")
         elif choice == 'L':
             print("\nHere is a list of Reports by Report ID and Report Name")
@@ -132,9 +136,9 @@ def initial_prompt(user_data, groups, reports):
                 print("\nPlease enter the name of the File you would like encrypt:")
                 file_name = input("File Name: ")
                 if os.path.isfile(file_name):
-                    infile = open(file_name, 'rb')
-                    outfile = open(file_name + ".enc", 'wb')
-                    encrypt_file(infile, outfile)
+                    key = input("Please enter the key you would like to encrypt the file with: ")
+                    # infile = open(file_name, 'rb')
+                    encrypt_file(file_name, key)
                     loop = False
                 else:
                     print ("Invalid File Name\n")
@@ -153,7 +157,7 @@ def initial_prompt(user_data, groups, reports):
 
 def select_report(user_data, groups, report, reports):
     print ("\nYou have selected the report ID: " + str(report[0]) + " Name: " + report[1] + '\n')
-    #[('id',), ('name',), ('company_name',), ('company_ceo',), ('company_phone',), ('company_email',), ('company_location',), ('company_country',), ('isprivate',), ('release_date',), ('industry_id',), ('sector_id',), ('group_id',)]
+    # [('id',), ('name',), ('company_name',), ('company_ceo',), ('company_phone',), ('company_email',), ('company_location',), ('company_country',), ('isprivate',), ('release_date',), ('industry_id',), ('sector_id',), ('group_id',)]
 
     industry = get_industy(report)
     sector = get_sector(report)
@@ -180,17 +184,17 @@ def select_report(user_data, groups, report, reports):
             print("Company Location: " + report[6])
             print("Company Country: " + report[7])
             print("Sector: " + sector)
-            print("Industry: "  + industry)
+            print("Industry: " + industry)
             print("Group: " + group_name)
             if report[8]:
                 print("Private : Yes")
             else:
                 print("Private : No")
             print("Release Date: " + str(report[9]))
-            i = 0
+            i = 1
             while i < len(attachments):
-                print ("Attachment " + str(i) + " "+ attachments[i][1][8:])
-                i+=1
+                print ("Attachment " + str(i) + " " + attachments[i][1][8:])
+                i += 1
             print("")
 
         elif choice == 'D':
@@ -204,7 +208,8 @@ def select_report(user_data, groups, report, reports):
             for attachment in attachments:
                 print("Downloading " + attachment[1][8:])
                 url = "http://cs3240.herokuapp.com/media/" + attachment[1]
-                file_path= directory_name + "/" + attachment[1][8:]
+                print(url)
+                file_path = directory_name + "/" + attachment[1][8:]
                 urllib.request.urlretrieve(url, file_path)
                 if attachment[4]:
                     loop = True
@@ -212,10 +217,8 @@ def select_report(user_data, groups, report, reports):
                         print("This file is encrypted. Would you like to decrypt it [Y/N]")
                         choice = input("Choice: ")
                         if choice == "Y":
-                            print (file_path[:-4])
-                            infile = open(file_path,'rb')
-                            outfile = open(file_path[:-4], 'wb')
-                            decrypt_file(infile, outfile)
+                            key = input ("Please enter the ey to decrpypt with: ")
+                            decrypt_file(file_path, key)
                             os.remove(file_path)
                             loop = False
                         elif choice == "N":
@@ -239,49 +242,103 @@ def get_industy(report):
     industry = database.fetchall()[0][0]
     return industry
 
+
 def get_sector(report):
     database.execute("SELECT name FROM reports_sector WHERE id=" + str(report[11]))
     sector = database.fetchall()[0][0]
     return sector
 
+
 def get_attachments(report):
-    #[('id',), ('attachment',), ('attachmenthash',), ('report_id',), ('isencrypted',)]
+    # [('id',), ('attachment',), ('attachmenthash',), ('report_id',), ('isencrypted',)]
     # database.execute("SELECT column_name FROM information_schema.columns WHERE TABLE_NAME='reports_reportattachment'")
     # print (database.fetchall())
     database.execute("SELECT * FROM reports_reportattachment WHERE report_id=" + str(report[0]))
     attachment_data = database.fetchall()
     return attachment_data
 
-def encrypt_file(infile, outfile, chunksize=64*1024):
-    key = "0123456789123456"
-    iv = ''.join(chr(random.randint(0, 0xFF)) for i in range(16))
-    encryptor = AES.new(key, AES.MODE_CBC, iv)
-    filesize = infile.size
-    outfile.write(struct.pack('<Q', filesize))
-    outfile.write(iv)
 
-    while True:
-        chunk = infile.read(chunksize)
-        if len(chunk) == 0:
-            break
-        elif len(chunk) % 16 != 0:
-            chunk += ' ' * (16 - len(chunk) % 16)
+# def encrypt_file(infile, outfile, chunksize=64*1024):
+#     key = "0123456789123456"
+#     iv = ''.join(chr(random.randint(0, 0xFF)) for i in range(16))
+#     encryptor = AES.new(key, AES.MODE_CBC, iv)
+#     filesize = infile.size
+#     outfile.write(struct.pack('<Q', filesize))
+#     outfile.write(iv)
+#
+#     while True:
+#         chunk = infile.read(chunksize)
+#         if len(chunk) == 0:
+#             break
+#         elif len(chunk) % 16 != 0:
+#             chunk += ' ' * (16 - len(chunk) % 16)
+#
+#         outfile.write(encryptor.encrypt(chunk))
+#     return outfile
 
-        outfile.write(encryptor.encrypt(chunk))
-    return outfile
+def encrypt_file(file_name, symmetric_key):
+    #symmetric_key = "0123456789123456"
+    if os.path.isfile(file_name):
+        input = open(file_name, 'rb')
+        output_file_name = file_name.__add__(".enc")
+        output = open(output_file_name, 'wb')
 
-def decrypt_file(infile, outfile, chunksize=64*1024):
-    key = "0123456789123456"
-    origsize = struct.unpack('<Q', infile.read(struct.calcsize('Q')))[0]
-    iv = infile.read(16)
-    decryptor = AES.new(key, AES.MODE_CBC, iv)
-    while True:
-        chunk = infile.read(chunksize)
-        if len(chunk) == 0:
-            break
-        outfile.write(decryptor.decrypt(chunk))
-    outfile.truncate(origsize)
-    return outfile
+        cipher = ARC4.new(symmetric_key)
+        size = sys.getsizeof(symmetric_key.encode('utf-8'), 32)
+        while size < 40:
+            symmetric_key = symmetric_key.__add__(' ')
+            size = size + 1
+        while size > 2048:
+            symmetric_key = symmetric_key[:-1]
+            size = size - 1
+        for line in input:
+            c = cipher.encrypt(line)
+            output.write(c)
+        input.close()
+        output.close()
+        return True
+    else:
+        return False
+
+
+def decrypt_file(file_name, symmetric_key):
+    #symmetric_key = "0123456789123456"
+    if os.path.isfile(file_name):
+        if (file_name[-4:] == ".enc"):
+            input = open(file_name, 'rb')
+            output_file_name = file_name
+            output_file_name = output_file_name[:-4]
+            output = open(output_file_name, 'wb')
+
+            cipher = ARC4.new(symmetric_key)
+            size = sys.getsizeof(symmetric_key.encode('utf-8'), 32)
+            while size < 40:
+                symmetric_key = symmetric_key.__add__(' ')
+                size = size + 1
+            while size > 2048:
+                symmetric_key = symmetric_key[:-1]
+                size = size - 1
+            for line in input:
+                c = cipher.decrypt(line)
+                output.write(c)
+            input.close()
+            output.close()
+            return True
+    return False
+
+
+# def decrypt_file(infile, outfile, chunksize=64*1024):
+#     key = "0123456789123456"
+#     origsize = struct.unpack('<Q', infile.read(struct.calcsize('Q')))[0]
+#     iv = infile.read(16)
+#     decryptor = AES.new(key, AES.MODE_CBC, iv)
+#     while True:
+#         chunk = infile.read(chunksize)
+#         if len(chunk) == 0:
+#             break
+#         outfile.write(decryptor.decrypt(chunk))
+#     outfile.truncate(origsize)
+#     return outfile
 
 
 
