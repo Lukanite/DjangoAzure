@@ -50,10 +50,35 @@
             </tr>
         </table>
         <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
-            {{ formset }}
+            {% for field in formset %}
+                {% if field == "Isencrypted" %}
+                    <div class="control-group">
+                        <label class="control-label">{{ "Is the File Encrypted?" }}</label>
+                        <div class="controls">{{ field }}
+                            {% if field.help_text %}
+                                <p class="help-inline">
+                                    <small>{{ field.help_text }}</small>
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="control-group">
+                        <label class="control-label">{{ field.label }}</label>
+                        <div class="controls">{{ field }}
+                            {% if field.help_text %}
+                                <p class="help-inline">
+                                    <small>{{ field.help_text }}</small>
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
             <button type="submit" class="save btn btn-default">Save</button>
         </form>
     {% else %}
+         <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
         {% for field in mainform %}
             {% if field.label == "Isprivate" %}
                 <div class="control-group">
@@ -104,6 +129,10 @@
                 </div>
             {% endif %}
         {% endfor %}
+         <button type="submit" class="save btn btn-default">Save</button>
+         </form>
+
+
         {#        <form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}#}
         {#            {{ mainform.as_p }}#}
         {#            {{ formset }}#}
