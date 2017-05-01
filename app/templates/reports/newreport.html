@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1>New Report</h1>
-    <form method="post" action="">
+    <form method="post" action="">{% csrf_token %}
         {% for field in mainform %}
             {% if field.errors %}
                 <div class="control-group error">
