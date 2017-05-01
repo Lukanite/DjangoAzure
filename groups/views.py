@@ -6,6 +6,8 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from groups.forms import GroupForm
 from django.contrib.auth.models import Group, User
+from django.core.mail import send_mail
+import smtplib
 
 
 @login_required()
@@ -81,12 +83,16 @@ def group_users(request, name):
         group = Group.objects.get(name=name)
         user = User.objects.get(username=request.POST.get('add'))
         group.user_set.add(user)
+        text = 'Hello, ' + user.first_name + '. This email is to notify you that you have been added to the "' + group.name + '" group! You can now view all reports associated with this group.'
+        send_email(user.email, "You've been added to a new group", text)
         return HttpResponseRedirect('/groups/' + group.name)
 
     if request.POST.get('remove'):
         group = Group.objects.get(name=name)
         user = User.objects.get(username=request.POST.get('remove'))
         group.user_set.remove(user)
+        text = 'Hello, ' + user.first_name + '. This email is to notify you that you have been removed from the "' + group.name + '" group. You can no longer view reports associated with this group.'
+        send_email(user.email, "You've been removed from a group", text)
         return HttpResponseRedirect('/groups/' + group.name)
 
     return render(
@@ -100,3 +106,23 @@ def group_users(request, name):
             'user_not_in_group': user_not_in_group
         }
     )
+
+def send_email(recipient, subject, text):
+
+
+    gmail_user = "lokahiteam19"
+    gmail_pwd = "cs3240lokahi"
+    FROM = "Lokahi Fintech"
+    TO = recipient if type(recipient) is list else [recipient]
+    SUBJECT = subject
+    TEXT = text
+
+    # Prepare actual message
+    message = """From: %s\nTo: %s\nSubject: %s\n\n%s
+    """ % (FROM, ", ".join(TO), SUBJECT, TEXT)
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.ehlo()
+    server.starttls()
+    server.login(gmail_user, gmail_pwd)
+    server.sendmail(FROM, TO, message)
+    server.close()
