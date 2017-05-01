@@ -80,7 +80,6 @@ def detail(request, report_id):
 
 @login_required()
 @user_passes_test(not_investor_user, login_url='/', redirect_field_name="")
-@csrf_exempt
 def newreport(request):
     if request.method == 'POST':
         filledform = ReportForm(request.POST, user=request.user)
