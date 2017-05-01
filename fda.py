@@ -217,7 +217,7 @@ def select_report(user_data, groups, report, reports):
                         print("This file is encrypted. Would you like to decrypt it [Y/N]")
                         choice = input("Choice: ")
                         if choice == "Y":
-                            key = input ("Please enter the ey to decrpypt with: ")
+                            key = input ("Please enter the key to decrypt with: ")
                             decrypt_file(file_path, key)
                             os.remove(file_path)
                             loop = False
