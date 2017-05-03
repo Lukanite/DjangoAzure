@@ -155,7 +155,6 @@ class Main(ttk.Frame):
         ttk.Label(top, text='Current Projects: ' + str(report[14]), wraplength=300, justify=tk.LEFT).grid(column=0, row=12, columnspan=4, sticky='w')
         ttk.Label(top, text='Private: ' + str(report[8])).grid(column=0, row=13, columnspan=4, sticky='w')
         ttk.Label(top, text='Release Date: ' + str(report[9])).grid(column=0, row=14, columnspan=4, sticky='w')
-        ttk.Label(top, text='Created By: ' + str(report[8])).grid(column=0, row=15, columnspan=4, sticky='w')
 
         ttk.Separator(top, orient='horizontal').grid(column=0, row=16, columnspan=6, sticky='ew')
 
@@ -176,13 +175,9 @@ class Main(ttk.Frame):
 
     def download_attachment(self, att, report):
         # make folder
-        print("----------> " + str(att))
         directory_name = "report_" + str(report[0]) + "_" + report[1] + "_attachments"
-        i = 1
-        while os.path.exists(directory_name):
-            directory_name = "report_" + str(report[0]) + "_" + report[1] + "_attachments(" + str(i) + ")"
-            i += 1
-        os.makedirs(directory_name)
+        if not os.path.exists(directory_name):
+            os.makedirs(directory_name)
 
         # download attachment
         url = "http://cs3240.herokuapp.com/media/" + att[1]
@@ -266,8 +261,6 @@ class Main(ttk.Frame):
             child.grid_configure(padx=5, pady=5)
 
 
-
-
 def main():
     # [('id',), ('password',), ('last_login',), ('is_superuser',), ('username',), ('first_name',),
     # ('last_name',), ('email',), ('is_staff',), ('is_active',), ('date_joined',)]
@@ -320,124 +313,6 @@ def get_reports(user_data, user_type, groups):
                 if r[12] == group[0]:
                     reports.append(r)
     return reports
-
-
-def initial_prompt(user_data, groups, reports):
-    while True:
-        print("Please enter L see list of Reports")
-        print("Please enter a Report ID to select a Report")
-        print("Please enter Q to quit")
-        print("Please enter E to encrypt a File")
-        choice = input("Choice: ")
-        if not (choice == 'Q' or choice == 'L' or choice == 'E' or choice.isdigit()):
-            print("\nInvalid Choice\n")
-        elif choice == 'L':
-            print("\nHere is a list of Reports by Report ID and Report Name")
-            print("ID\tName")
-            for report in reports:
-                print (str(report[0]) + "\t" + report[1])
-            print("")
-
-        elif choice == 'Q':
-            print("\nGoodbye")
-            quit()
-
-        elif choice == 'E':
-            loop = True
-            while (loop):
-                print("\nPlease enter the name of the File you would like encrypt:")
-                file_name = input("File Name: ")
-                if os.path.isfile(file_name):
-                    key = input("Please enter the key you would like to encrypt the file with: ")
-                    # infile = open(file_name, 'rb')
-                    encrypt_file(file_name, key)
-                    loop = False
-                else:
-                    print ("Invalid File Name\n")
-
-        else:
-            choice = int(choice)
-            valid_selection = False
-            for report in reports:
-                if choice == int(report[0]):
-                    valid_selection = True
-                    select_report(user_data, groups, report, reports)
-                    quit()
-            if not valid_selection:
-                print("\nInvalid Choice\n")
-
-
-def select_report(user_data, groups, report, reports):
-    print ("\nYou have selected the report ID: " + str(report[0]) + " Name: " + report[1] + '\n')
-
-    while True:
-        print("Please enter V to view the Report")
-        print("Please enter D to download the attachments of Report")
-        print("Please enter B to go back")
-        print("Please enter Q to quit")
-        choice = input("Choice: ")
-        if choice == 'V':
-            print("\nReport View\n")
-            print("ID: " + str(report[0]))
-            print("Name: " + report[1])
-            print("Company Name: " + report[2])
-            print("Company CEO: " + report[3])
-            print("Company Phone: " + report[4])
-            print("Company Email: " + report[5])
-            print("Company Location: " + report[6])
-            print("Company Country: " + report[7])
-            print("Sector: " + sector)
-            print("Industry: " + industry)
-            print("Group: " + group_name)
-            if report[8]:
-                print("Private : Yes")
-            else:
-                print("Private : No")
-            print("Release Date: " + str(report[9]))
-            i = 1
-            while i < len(attachments):
-                print ("Attachment " + str(i) + " " + attachments[i][1][8:])
-                i += 1
-            print("")
-
-        elif choice == 'D':
-            directory_name = "report_" + str(report[0]) + "_" + report[1] + "_attachments"
-            i = 1
-            while os.path.exists(directory_name):
-                directory_name = "report_" + str(report[0]) + "_" + report[1] + "_attachments(" + str(i) + ")"
-                i += 1
-            os.makedirs(directory_name)
-            print("")
-            for attachment in attachments:
-                print("Downloading " + attachment[1][8:])
-                url = "http://cs3240.herokuapp.com/media/" + attachment[1]
-                print(url)
-                file_path = directory_name + "/" + attachment[1][8:]
-                urllib.request.urlretrieve(url, file_path)
-                if attachment[4]:
-                    loop = True
-                    while loop:
-                        print("This file is encrypted. Would you like to decrypt it [Y/N]")
-                        choice = input("Choice: ")
-                        if choice == "Y":
-                            key = input ("Please enter the key to decrypt with: ")
-                            decrypt_file(file_path, key)
-                            os.remove(file_path)
-                            loop = False
-                        elif choice == "N":
-                            loop = False
-            print("")
-
-
-        elif choice == 'B':
-            print ("\nGoing back\n")
-            initial_prompt(user_data, groups, reports)
-
-        elif choice == 'Q':
-            print("\nGoodbye")
-            quit()
-        else:
-            print("\nInvalid Choice\n")
 
 
 def get_industy(report):
@@ -512,5 +387,4 @@ def decrypt_file(file_name, symmetric_key):
     return False
 
 main()
-
 
